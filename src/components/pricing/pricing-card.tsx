@@ -19,6 +19,7 @@ import type {
 import { PlanIntervals, PaymentTypes } from '@/payment/types';
 import { IconCircleCheck, IconCircleX } from '@tabler/icons-react';
 import { Link } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { CheckoutButton } from './create-checkout-button';
 import { Routes } from '@/lib/routes';
@@ -52,7 +53,14 @@ export function PricingCard({
 }: PricingCardProps) {
   const price = getPriceForPlan(plan, interval, paymentType);
   const { data: session } = authClient.useSession();
+  const [mounted, setMounted] = useState(false);
   const currentUser = session?.user;
+  const isAuthenticated = mounted && !!currentUser;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   let formattedPrice = '';
   let priceLabel = '';
   if (plan.isFree) {
@@ -104,7 +112,7 @@ export function PricingCard({
         </CardDescription>
 
         {plan.isFree ? (
-          currentUser ? (
+          isAuthenticated ? (
             <Button variant="outline" className="mt-4 w-full" disabled>
               {m.pricing_card_get_started_for_free()}
             </Button>
@@ -127,7 +135,7 @@ export function PricingCard({
             {m.pricing_card_your_current_plan()}
           </Button>
         ) : isPaidPlan && price ? (
-          currentUser && hasValidPriceId ? (
+          isAuthenticated && hasValidPriceId ? (
             <CheckoutButton
               planId={plan.id}
               priceId={price.priceId}
@@ -138,7 +146,7 @@ export function PricingCard({
                 ? m.pricing_card_get_lifetime_access()
                 : m.pricing_card_get_started()}
             </CheckoutButton>
-          ) : currentUser && !hasValidPriceId ? (
+          ) : isAuthenticated && !hasValidPriceId ? (
             <Button disabled className="mt-4 w-full">
               {m.pricing_card_not_available()}
             </Button>
