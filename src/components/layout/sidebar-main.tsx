@@ -10,16 +10,15 @@ import {
 import { getSidebarLinks } from '@/config/sidebar-config';
 import type { MenuItemConfig } from '@/types';
 import { Link, useRouterState } from '@tanstack/react-router';
-import { authClient } from '@/auth/client';
+import type { SessionUser } from '@/auth/types';
 import { useMemo } from 'react';
 
 /**
  * Filters sidebar links based on user role (authorizeOnly)
  */
-function useFilteredSidebarLinks(): MenuItemConfig[] {
+function useFilteredSidebarLinks(user: SessionUser): MenuItemConfig[] {
   const links = getSidebarLinks();
-  const { data: session } = authClient.useSession();
-  const userRole = session?.user?.role;
+  const userRole = user.role;
 
   return useMemo(() => {
     const filterByRole = (items: MenuItemConfig[]): MenuItemConfig[] => {
@@ -45,8 +44,12 @@ function useFilteredSidebarLinks(): MenuItemConfig[] {
   }, [links, userRole]);
 }
 
-export function SidebarMain() {
-  const items = useFilteredSidebarLinks();
+interface SidebarMainProps {
+  user: SessionUser;
+}
+
+export function SidebarMain({ user }: SidebarMainProps) {
+  const items = useFilteredSidebarLinks(user);
   const pathname = useRouterState({ select: (s) => s.location.pathname }) ?? '';
   const { isMobile, setOpenMobile } = useSidebar();
 

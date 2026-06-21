@@ -12,24 +12,20 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { websiteConfig } from '@/config/website';
-import { authClient } from '@/auth/client';
 import { Link } from '@tanstack/react-router';
 import { Routes } from '@/lib/routes';
+import type { SessionUser } from '@/auth/types';
 import type * as React from 'react';
-import { useEffect, useState } from 'react';
+
+type DashboardSidebarProps = React.ComponentProps<typeof Sidebar> & {
+  user: SessionUser;
+};
 
 /**
  * Dashboard sidebar
  */
-export function DashboardSidebar(props: React.ComponentProps<typeof Sidebar>) {
-  const [mounted, setMounted] = useState(false);
-  const { data: session, isPending } = authClient.useSession();
-  const currentUser = session?.user;
+export function DashboardSidebar({ user, ...props }: DashboardSidebarProps) {
   const { isMobile, setOpenMobile } = useSidebar();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const closeMobileSidebar = () => {
     if (isMobile) setOpenMobile(false);
@@ -56,13 +52,11 @@ export function DashboardSidebar(props: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
 
       <SidebarContent>
-        {!isPending && mounted && <SidebarMain />}
+        <SidebarMain user={user} />
       </SidebarContent>
 
       <SidebarFooter className="flex flex-col gap-4">
-        {!isPending && mounted && currentUser && (
-          <SidebarUser user={currentUser} />
-        )}
+        <SidebarUser user={user} />
       </SidebarFooter>
     </Sidebar>
   );
