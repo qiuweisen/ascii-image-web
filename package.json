@@ -27,6 +27,7 @@
     "db:push": "drizzle-kit push",
     "db:studio:local": "drizzle-kit studio --config drizzle.config.local.ts",
     "db:studio:remote": "drizzle-kit studio --config drizzle.config.ts",
+    "db:sync:local": "tsx scripts/sync-d1-remote-to-local.ts",
     "db:migrate:local": "wrangler d1 migrations apply $(tsx scripts/get-db-name.ts) --local",
     "db:migrate:remote": "wrangler d1 migrations apply $(tsx scripts/get-db-name.ts) --remote"
   },
