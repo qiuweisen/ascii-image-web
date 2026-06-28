@@ -37,8 +37,6 @@ jobs:
       VITE_UMAMI_WEBSITE_ID: ${{ secrets.VITE_UMAMI_WEBSITE_ID }}
       VITE_UMAMI_SCRIPT: ${{ secrets.VITE_UMAMI_SCRIPT }}
       VITE_CRISP_WEBSITE_ID: ${{ secrets.VITE_CRISP_WEBSITE_ID }}
-      VITE_AFFILIATE_AFFONSO_ID: ${{ secrets.VITE_AFFILIATE_AFFONSO_ID }}
-      VITE_AFFILIATE_PROMOTEKIT_ID: ${{ secrets.VITE_AFFILIATE_PROMOTEKIT_ID }}
 
     steps:
       - name: Checkout code
