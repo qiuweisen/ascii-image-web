@@ -84,6 +84,10 @@ export const websiteConfig: WebsiteConfig = {
     enable: true,
     provider: 'discord',
   },
+  cache: {
+    enable: true,
+    provider: 'kv',
+  },
   storage: {
     enable: true,
     provider: 'r2',

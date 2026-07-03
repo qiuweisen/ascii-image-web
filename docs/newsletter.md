@@ -1,6 +1,6 @@
 # Newsletter module
 
-Email subscribe / unsubscribe / status, driven by **Resend** or **Beehiiv**. Config via `websiteConfig.newsletter`; env from **serverEnv** (`src/env/server.ts`). See [Env](./env.md) for variable list and where to set them.
+Email subscribe / unsubscribe / status, driven by **Resend** or **Beehiiv**. Config via `websiteConfig.newsletter`; env from **serverEnv** (`src/env/server.ts`). Status checks can use the [Cache](./cache.md) module when `websiteConfig.cache` is enabled. See [Env](./env.md) for variable list and where to set them.
 
 **Consumers:** API routes (`/api/newsletter/subscribe`, `unsubscribe`, `status`), hooks (`use-newsletter`), settings card (`NewsletterFormCard`), marketing block (`NewsletterCard`). Optional welcome email after subscribe is sent by the **Mail** module when `websiteConfig.mail.fromEmail` is set.
 
@@ -76,9 +76,9 @@ Newsletter is exposed as **TanStack Start server functions** in `src/api/newslet
 
 | Server function | Input | Behavior |
 |-----------------|--------|----------|
-| `getNewsletterStatus` | `{ email }` | Calls `isSubscribed(email)`; returns `{ subscribed }`. |
-| `subscribeNewsletter` | `{ email }` | Validates email → `subscribe(email)` → optional welcome email (Mail module when `mail.fromEmail` set). |
-| `unsubscribeNewsletter` | `{ email }` | Validates email → `unsubscribe(email)`. |
+| `getNewsletterStatus` | `{ email }` | Reads cached status when available, otherwise calls `isSubscribed(email)`; returns `{ subscribed }`. |
+| `subscribeNewsletter` | `{ email }` | Validates email → `subscribe(email)` → deletes status cache → optional welcome email (Mail module when `mail.fromEmail` set). |
+| `unsubscribeNewsletter` | `{ email }` | Validates email → `unsubscribe(email)` → deletes status cache. |
 
 All return 400 when newsletter is disabled or email invalid; throw or return errors on provider/network failures. The hooks in `use-newsletter.ts` invoke these server functions.
 

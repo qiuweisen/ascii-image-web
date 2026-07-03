@@ -76,5 +76,15 @@
       "bucket_name": "mkfast-template",
       "binding": "BUCKET"
     }
+  ],
+  /**
+   * KV: server-side cache.
+   * Create with `npx wrangler kv namespace create CACHE`, then replace the id.
+   */
+  "kv_namespaces": [
+    {
+      "binding": "CACHE",
+      "id": "d3433bea8e7549da914f1f76dc73573c"
+    }
   ]
 }

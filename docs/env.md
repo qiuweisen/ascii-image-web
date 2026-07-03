@@ -50,7 +50,7 @@ Do **not** put `VITE_*` in Wrangler `vars` or `wrangler secret`—they are build
 
 Read at **Worker request time**. Used for secrets, API keys, and server-only config.
 
-**Where to set:** Local → `.env.local` (loaded into `process.env` by the dev process). Cloudflare Workers → **`wrangler secret put <NAME>`** for secrets, or **`vars`** in `wrangler.jsonc` for non-sensitive values. With `nodejs_compat_populate_process_env` enabled, vars and secrets appear on `process.env`. D1/R2 and other **bindings** are accessed via `env.DB`, `env.FILES`, etc., not `process.env`.
+**Where to set:** Local → `.env.local` (loaded into `process.env` by the dev process). Cloudflare Workers → **`wrangler secret put <NAME>`** for secrets, or **`vars`** in `wrangler.jsonc` for non-sensitive values. With `nodejs_compat_populate_process_env` enabled, vars and secrets appear on `process.env`. D1/R2/KV and other **bindings** are accessed via `env.DB`, `env.BUCKET`, `env.CACHE`, etc., not `process.env`.
 
 ### Variables
 
@@ -85,7 +85,19 @@ Read at **Worker request time**. Used for secrets, API keys, and server-only con
 
 ---
 
-## 3. VITE_BASE_URL and getBaseUrl()
+## 3. Worker bindings
+
+Bindings are configured in `wrangler.jsonc`, not `serverEnv`.
+
+| Binding | Resource | Used by |
+|---------|----------|---------|
+| `DB` | Cloudflare D1 | Database / Drizzle |
+| `BUCKET` | Cloudflare R2 | [Storage](./storage.md) |
+| `CACHE` | Cloudflare KV | [Cache](./cache.md), newsletter status caching |
+
+---
+
+## 4. VITE_BASE_URL and getBaseUrl()
 
 `getBaseUrl()` in `src/lib/urls.ts` reads **clientEnv.VITE_BASE_URL** (build-time).
 
@@ -94,7 +106,7 @@ Read at **Worker request time**. Used for secrets, API keys, and server-only con
 
 ---
 
-## 4. Files and config overview
+## 5. Files and config overview
 
 | File / mechanism | When it applies | Notes |
 |------------------|-----------------|--------|

@@ -11,6 +11,7 @@ export interface WebsiteConfig {
   mail?: MailConfig;
   newsletter?: NewsletterConfig;
   notification?: NotificationConfig;
+  cache?: CacheConfig;
   storage?: StorageConfig;
   payment?: PaymentConfig;
 }
@@ -86,6 +87,12 @@ export interface NewsletterConfig {
 export interface NotificationConfig {
   enable: boolean;                    // Whether to enable the notification
   provider?: 'discord' | 'feishu';    // The notification provider
+}
+
+/** Cache configuration */
+export interface CacheConfig {
+  enable: boolean;      // Whether to enable server-side cache helpers
+  provider?: 'kv';      // The cache provider (Cloudflare KV)
 }
 
 /** Storage configuration */

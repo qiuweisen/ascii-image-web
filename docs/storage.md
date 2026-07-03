@@ -18,12 +18,12 @@ The storage module provides file upload (and optional delete) using **Cloudflare
    "r2_buckets": [
      {
        "bucket_name": "mkfast-template",
-       "binding": "FILES"
+       "binding": "BUCKET"
      }
    ]
    ```
 
-   The Worker receives the bucket as `env.FILES`. No extra env vars are required for upload/serve.
+   The Worker receives the bucket as `env.BUCKET`. No extra env vars are required for upload/serve.
 
 3. **Enable storage in website config** (`src/config/website.ts`):
 
@@ -42,10 +42,10 @@ The storage module provides file upload (and optional delete) using **Cloudflare
 
 ```
 src/storage/
-├── index.ts           # getR2Bucket, getStorageProvider, uploadFile, deleteFile, …
+├── index.ts           # getStorageProvider, uploadFile, deleteFile, …
 ├── types.ts           # StorageConfig (provider options), R2BucketInterface, UploadFileResult, errors
 └── provider/
-    └── r2.ts          # getR2Bucket(), R2Provider (upload, delete, download, list, …)
+    └── r2.ts          # R2Provider (upload, delete, download, list, …)
 ```
 
 ## Configuration
@@ -58,7 +58,7 @@ src/storage/
   - `userFilesFolder`: Parent folder for per-user files (e.g. `'userfiles'`); used by Settings → Files and upload API.
 
 - **wrangler.jsonc**
-  - `r2_buckets`: Bind the R2 bucket with `binding: "FILES"` (and `bucket_name`). `getR2Bucket()` in `provider/r2.ts` reads `env.FILES` and is exported from `@/storage`.
+  - `r2_buckets`: Bind the R2 bucket with `binding: "BUCKET"` (and `bucket_name`). `R2Provider` in `provider/r2.ts` reads `env.BUCKET` and is exported from `@/storage`.
 
 Files are always served via the same-origin route `/api/storage/file?key=...`.
 

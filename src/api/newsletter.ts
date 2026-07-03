@@ -1,4 +1,5 @@
 import { createServerFn } from '@tanstack/react-start';
+import { CACHE_TTL, createCacheKey, deleteCache, getOrSetCache } from '@/cache';
 import { websiteConfig } from '@/config/website';
 import { sendEmail } from '@/mail';
 import { isSubscribed, subscribe, unsubscribe } from '@/newsletter';
@@ -12,13 +13,24 @@ function ensureNewsletterEnabled(): void {
   }
 }
 
+function getNewsletterStatusCacheKey(email: string): string {
+  return createCacheKey('newsletter:status', email.trim().toLowerCase());
+}
+
 export const getNewsletterStatus = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ email: emailSchema }))
   .handler(async ({ data }) => {
     ensureNewsletterEnabled();
+    const email = data.email.trim().toLowerCase();
     try {
-      const subscribed = await isSubscribed(data.email);
-      return { subscribed };
+      return getOrSetCache({
+        key: getNewsletterStatusCacheKey(email),
+        ttlSeconds: CACHE_TTL.newsletterStatus,
+        fetcher: async () => {
+          const subscribed = await isSubscribed(email);
+          return { subscribed };
+        },
+      });
     } catch (error) {
       console.error('Check newsletter status error:', error);
       throw new Error(
@@ -31,19 +43,21 @@ export const subscribeNewsletter = createServerFn({ method: 'POST' })
   .inputValidator(z.object({ email: emailSchema }))
   .handler(async ({ data }) => {
     ensureNewsletterEnabled();
+    const email = data.email.trim().toLowerCase();
     try {
-      const ok = await subscribe(data.email);
+      const ok = await subscribe(email);
       if (!ok) {
         throw new Error('Failed to subscribe to the newsletter');
       }
+      await deleteCache(getNewsletterStatusCacheKey(email));
       if (websiteConfig.mail?.fromEmail) {
         // Wait for 3 seconds to ensure the newsletter is subscribed
         await new Promise((r) => setTimeout(r, 3000));
         try {
           await sendEmail({
-            to: data.email,
+            to: email,
             template: 'subscribeNewsletter',
-            context: { email: data.email },
+            context: { email },
           });
         } catch (e) {
           console.error('Newsletter welcome email error:', e);
@@ -61,11 +75,13 @@ export const unsubscribeNewsletter = createServerFn({ method: 'POST' })
   .inputValidator(z.object({ email: emailSchema }))
   .handler(async ({ data }) => {
     ensureNewsletterEnabled();
+    const email = data.email.trim().toLowerCase();
     try {
-      const ok = await unsubscribe(data.email);
+      const ok = await unsubscribe(email);
       if (!ok) {
         throw new Error('Failed to unsubscribe from the newsletter');
       }
+      await deleteCache(getNewsletterStatusCacheKey(email));
     } catch (error) {
       console.error('Unsubscribe newsletter error:', error);
       throw new Error(
