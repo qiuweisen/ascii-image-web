@@ -6,7 +6,7 @@ export default function BuiltWithButton() {
     <a
       target="_blank"
       rel="noopener noreferrer"
-      href="https://tanstarter.com?utm_source=built-with-tanstarter"
+      href="https://tanstarter.dev?utm_source=built-with-tanstarter"
       className={cn(
         buttonVariants({ variant: 'outline', size: 'sm' }),
         'border border-border px-4 py-4 rounded-md gap-2'
