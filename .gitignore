@@ -44,6 +44,9 @@ src/locale/paraglide
 .security-key
 logs/security/
 
+# Firecrawl research cache
+.firecrawl/
+
 # Playwright
 playwright-report
 test-results
