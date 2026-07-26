@@ -1,5 +1,4 @@
 import { authClient } from '@/auth/client';
-import type { ApiKey } from '@/db/types';
 import {
   keepPreviousData,
   useMutation,
@@ -31,8 +30,8 @@ export function useApiKeys(pageIndex: number, pageSize: number) {
         throw new Error(result.error.message || 'Failed to fetch API keys');
       }
 
-      const items = (result.data ?? []) as ApiKey[];
-      return { items, total: items.length };
+      const items = result.data?.apiKeys ?? [];
+      return { items, total: result.data?.total ?? 0 };
     },
     placeholderData: keepPreviousData,
   });

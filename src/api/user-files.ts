@@ -15,7 +15,7 @@ const listSchema = z.object({
 });
 
 export const listUserFiles = createServerFn({ method: 'GET' })
-  .inputValidator(listSchema)
+  .validator(listSchema)
   .middleware([authApiMiddleware])
   .handler(async ({ data, context }) => {
     const { userId } = context;
@@ -44,7 +44,7 @@ export const listUserFiles = createServerFn({ method: 'GET' })
 const deleteSchema = z.object({ id: z.string() });
 
 export const deleteUserFile = createServerFn({ method: 'POST' })
-  .inputValidator(deleteSchema)
+  .validator(deleteSchema)
   .middleware([authApiMiddleware])
   .handler(async ({ data, context }) => {
     const { userId } = context;
@@ -89,7 +89,7 @@ const uploadSchema = z
   });
 
 export const uploadUserFile = createServerFn({ method: 'POST' })
-  .inputValidator(uploadSchema)
+  .validator(uploadSchema)
   .middleware([authApiMiddleware])
   .handler(async ({ data, context }) => {
     const { userId } = context;

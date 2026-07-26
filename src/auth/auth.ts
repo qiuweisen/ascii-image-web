@@ -9,7 +9,8 @@ import { getBaseUrl } from '@/lib/urls';
 import { serverEnv } from '@/env/server';
 import { websiteConfig } from '@/config/website';
 import { emailHarmony } from 'better-auth-harmony';
-import { admin, apiKey } from 'better-auth/plugins';
+import { apiKey } from '@better-auth/api-key';
+import { admin } from 'better-auth/plugins';
 
 /**
  * Better Auth Configuration
@@ -107,8 +108,6 @@ export const auth = betterAuth({
     },
   },
   plugins: [
-    // https://www.better-auth.com/docs/integrations/tanstack
-    tanstackStartCookies(),
     // https://www.better-auth.com/docs/plugins/admin
     // support user management, ban/unban user, manage user roles, etc.
     admin({
@@ -129,6 +128,9 @@ export const auth = betterAuth({
       // e.g., user signed up with johndoe@googlemail.com can't login with johndoe+abc@gmail.com
       allowNormalizedSignin: false,
     }),
+    // https://www.better-auth.com/docs/integrations/tanstack
+    // Cookie integration must be last so earlier plugin cookies are forwarded.
+    tanstackStartCookies(),
   ],
   onAPIError: {
     // https://www.better-auth.com/docs/reference/options#onapierror

@@ -29,6 +29,13 @@ explicitly provisioned.
 - Specs: `tests/e2e/specs/`
 - Fixtures: `tests/e2e/fixtures/`
 - Test-only API: `src/routes/api/e2e/users.ts`
+- Local state: `.wrangler/e2e-state/` (recreated for every run)
+
+Playwright starts Vite on the configured `PORT` and points both Wrangler
+migrations and the Cloudflare Vite plugin at the same isolated local state.
+This keeps E2E data separate from the developer's `.wrangler/state` database.
+`pnpm e2e:production` builds the app and runs a smaller smoke suite against
+Cloudflare Vite preview so production SSR and API output are covered too.
 
 The test-only API is disabled unless Vite is running locally with
 `import.meta.env.DEV === true`, `MODE=e2e`, and the request includes the
@@ -82,7 +89,60 @@ Verifies the signed-in profile update flow.
 
 | # | Test name | Flow |
 |---|---|---|
-| 1 | User can update display name | Sign in, open `/settings/profile`, change the name, save, verify success toast, and reload to verify persistence. |
+| 1 | User can update display name | Sign in, open `/settings/profile`, change the name, save, verify success toast and persistence. |
+
+## 5. API Key Settings
+
+**File:** `specs/settings-apikeys.spec.ts` | **Priority:** P0
+
+Verifies the Better Auth API key lifecycle through the signed-in UI.
+
+| # | Test name | Flow |
+|---|---|---|
+| 1 | User can create and delete an API key | Sign in, create a named API key, verify the one-time secret and persisted table row, delete it, and verify the row disappears. |
+
+## 6. Security Settings
+
+**File:** `specs/settings-security.spec.ts` | **Priority:** P0
+
+Verifies credential changes through Better Auth and the real browser session.
+
+| # | Test name | Flow |
+|---|---|---|
+| 1 | User can change password | Sign in, change the password, sign out, verify the old password is rejected, then sign in with the new password. |
+
+## 7. File Settings
+
+**File:** `specs/settings-files.spec.ts` | **Priority:** P0
+
+Verifies the D1 and R2 file lifecycle through the signed-in UI and same-origin
+download endpoint, including TanStack Server Function CSRF protection.
+
+| # | Test name | Flow |
+|---|---|---|
+| 1 | User can upload, read, and delete a private file | Sign in, upload a text file, verify its table row and authenticated response headers/body, replay the upload request from a cross-site origin and verify a 403 response, delete the file, and verify the row disappears. |
+
+## 8. Production Worker Smoke Test
+
+**File:** `production/production-smoke.spec.ts` | **Priority:** P0
+
+Verifies the built Worker rather than the Vite development server.
+
+| # | Test name | Flow |
+|---|---|---|
+| 1 | Production Worker serves SSR and API responses | Build the app, start Cloudflare Vite preview, render and hydrate representative public routes, verify guest auth redirect and `/api/ping`, and confirm the E2E helper returns 404. |
+
+## 9. Router Boundaries
+
+**File:** `specs/router-boundaries.spec.ts` | **Priority:** P0
+
+Verifies TanStack Router error handling at the HTTP and rendered UI boundaries.
+
+| # | Test name | Flow |
+|---|---|---|
+| 1 | Unknown route renders not found | Open an unknown route, verify HTTP 404 and the root not-found UI. |
+| 2 | Loader notFound renders root boundary | Open `/test-404`, verify HTTP 404 and the root not-found UI. |
+| 3 | Loader error renders catch boundary | Open `/test-error`, verify HTTP 500, the catch-boundary UI, and the original error message. |
 
 ## Deferred Coverage
 
@@ -91,6 +151,5 @@ These flows should be added after their dependencies are made deterministic:
 | Area | Reason |
 |---|---|
 | Payment checkout and portal | Requires Stripe or Creem test fixtures, webhook simulation, and provider-specific env. |
-| R2 file uploads | Requires deterministic local storage assertions and small fixture files. |
 | Transactional email | Requires a fake mail provider or captured verification links. |
 | AI tools | Requires provider mocks or stable fake responses to avoid cost and flake. |

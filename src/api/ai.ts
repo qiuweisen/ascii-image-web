@@ -214,7 +214,7 @@ async function runWorkersAi<TResult>(
  * `WORKERS_AI_MODELS.summarization` via the Workers AI REST API.
  */
 export const summarizeText = createServerFn({ method: 'POST' })
-  .inputValidator(summarizationSchema)
+  .validator(summarizationSchema)
   .handler(async ({ data }) => {
     const result = await runWorkersAi<{ response?: string }>(
       WORKERS_AI_MODELS.summarization,
@@ -247,7 +247,7 @@ export const summarizeText = createServerFn({ method: 'POST' })
  * `WORKERS_AI_MODELS.translation` (Many-to-Many multilingual translation).
  */
 export const translateText = createServerFn({ method: 'POST' })
-  .inputValidator(translationSchema)
+  .validator(translationSchema)
   .handler(async ({ data }) => {
     const result = await runWorkersAi<{ translated_text?: string }>(
       WORKERS_AI_MODELS.translation,
@@ -273,7 +273,7 @@ export const translateText = createServerFn({ method: 'POST' })
  * the output to a numbered list — no follow-up turns are kept.
  */
 export const generateTaglines = createServerFn({ method: 'POST' })
-  .inputValidator(taglineSchema)
+  .validator(taglineSchema)
   .handler(async ({ data }) => {
     const result = await runWorkersAi<{ response?: string }>(
       WORKERS_AI_MODELS.tagline,
@@ -325,7 +325,7 @@ function parseTaglines(text: string): string[] {
  * Returns the hosted image URL produced by fal.
  */
 export const generateAiImage = createServerFn({ method: 'POST' })
-  .inputValidator(imageGenerationSchema)
+  .validator(imageGenerationSchema)
   .handler(async ({ data }) => {
     const apiKey = serverEnv.FAL_KEY;
     if (!apiKey) {
@@ -367,7 +367,7 @@ export const generateAiImage = createServerFn({ method: 'POST' })
  * well for portrait → caricature / cartoon / anime transformations.
  */
 export const editAiImage = createServerFn({ method: 'POST' })
-  .inputValidator(imageEditSchema)
+  .validator(imageEditSchema)
   .handler(async ({ data }) => {
     const apiKey = serverEnv.FAL_KEY;
     if (!apiKey) {
@@ -404,7 +404,7 @@ export const editAiImage = createServerFn({ method: 'POST' })
  * them and return a data URL the browser can feed straight to `<audio>`.
  */
 export const synthesizeSpeech = createServerFn({ method: 'POST' })
-  .inputValidator(ttsSchema)
+  .validator(ttsSchema)
   .handler(async ({ data }) => {
     const accountId = serverEnv.CLOUDFLARE_ACCOUNT_ID;
     const apiKey = serverEnv.CLOUDFLARE_API_TOKEN;
@@ -468,7 +468,7 @@ function arrayBufferToBase64(buffer: ArrayBuffer): string {
  * can render directly.
  */
 export const generateCfImage = createServerFn({ method: 'POST' })
-  .inputValidator(cfImageGenerationSchema)
+  .validator(cfImageGenerationSchema)
   .handler(async ({ data }) => {
     const accountId = serverEnv.CLOUDFLARE_ACCOUNT_ID;
     const apiKey = serverEnv.CLOUDFLARE_API_TOKEN;
@@ -539,7 +539,7 @@ export const generateCfImage = createServerFn({ method: 'POST' })
  * forward the bytes here.
  */
 export const captionImage = createServerFn({ method: 'POST' })
-  .inputValidator(captionSchema)
+  .validator(captionSchema)
   .handler(async ({ data }) => {
     const bytes = base64ToBytes(data.imageBase64);
 
