@@ -18,7 +18,7 @@ function getNewsletterStatusCacheKey(email: string): string {
 }
 
 export const getNewsletterStatus = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ email: emailSchema }))
+  .validator(z.object({ email: emailSchema }))
   .handler(async ({ data }) => {
     ensureNewsletterEnabled();
     const email = data.email.trim().toLowerCase();
@@ -40,7 +40,7 @@ export const getNewsletterStatus = createServerFn({ method: 'GET' })
   });
 
 export const subscribeNewsletter = createServerFn({ method: 'POST' })
-  .inputValidator(z.object({ email: emailSchema }))
+  .validator(z.object({ email: emailSchema }))
   .handler(async ({ data }) => {
     ensureNewsletterEnabled();
     const email = data.email.trim().toLowerCase();
@@ -72,7 +72,7 @@ export const subscribeNewsletter = createServerFn({ method: 'POST' })
   });
 
 export const unsubscribeNewsletter = createServerFn({ method: 'POST' })
-  .inputValidator(z.object({ email: emailSchema }))
+  .validator(z.object({ email: emailSchema }))
   .handler(async ({ data }) => {
     ensureNewsletterEnabled();
     const email = data.email.trim().toLowerCase();

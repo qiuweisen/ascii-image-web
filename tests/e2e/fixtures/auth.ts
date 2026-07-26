@@ -10,7 +10,7 @@ export async function cleanupE2EUsers(request: APIRequestContext) {
     headers: e2eHeaders,
   });
 
-  expect(response.status()).toBeLessThan(500);
+  expect(response.ok(), await response.text()).toBeTruthy();
 }
 
 export async function registerE2EUser(

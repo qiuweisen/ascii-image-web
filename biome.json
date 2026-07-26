@@ -23,6 +23,7 @@
       "!test-results",
       "!.wrangler",
       "!.content-collections",
+      "!.firecrawl",
       "!project.inlang/.meta.json",
       "!src/locale/paraglide",
       "!worker-configuration.d.ts",

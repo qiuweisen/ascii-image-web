@@ -9,79 +9,54 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
-import { Route as ManifestDotjsonRouteImport } from './routes/manifest[.]json'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as SettingsIndexRouteImport } from './routes/settings/index'
-import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
-import { Route as BlogIndexRouteImport } from './routes/blog/index'
-import { Route as AdminIndexRouteImport } from './routes/admin/index'
-import { Route as SettingsSecurityRouteImport } from './routes/settings/security'
-import { Route as SettingsProfileRouteImport } from './routes/settings/profile'
-import { Route as SettingsPaymentRouteImport } from './routes/settings/payment'
-import { Route as SettingsNotificationsRouteImport } from './routes/settings/notifications'
-import { Route as SettingsFilesRouteImport } from './routes/settings/files'
-import { Route as SettingsBillingRouteImport } from './routes/settings/billing'
-import { Route as SettingsApikeysRouteImport } from './routes/settings/apikeys'
-import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
-import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
-import { Route as AuthRegisterRouteImport } from './routes/auth/register'
-import { Route as AuthLoginRouteImport } from './routes/auth/login'
-import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
-import { Route as AuthErrorRouteImport } from './routes/auth/error'
-import { Route as ApiPingRouteImport } from './routes/api/ping'
-import { Route as AdminUsersRouteImport } from './routes/admin/users'
-import { Route as testsTestErrorRouteImport } from './routes/(tests)/test-error'
-import { Route as testsTest404RouteImport } from './routes/(tests)/test-404'
-import { Route as pagesWaitlistRouteImport } from './routes/(pages)/waitlist'
-import { Route as pagesRoadmapRouteImport } from './routes/(pages)/roadmap'
-import { Route as pagesPricingRouteImport } from './routes/(pages)/pricing'
-import { Route as pagesContactRouteImport } from './routes/(pages)/contact'
-import { Route as pagesChangelogRouteImport } from './routes/(pages)/changelog'
-import { Route as pagesAiRouteImport } from './routes/(pages)/ai'
-import { Route as pagesAboutRouteImport } from './routes/(pages)/about'
-import { Route as legalsTermsRouteImport } from './routes/(legals)/terms'
-import { Route as legalsPrivacyRouteImport } from './routes/(legals)/privacy'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ManifestDotjsonRouteImport } from './routes/manifest[.]json'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as legalsCookieRouteImport } from './routes/(legals)/cookie'
-import { Route as ApiWebhooksStripeRouteImport } from './routes/api/webhooks/stripe'
-import { Route as ApiWebhooksCreemRouteImport } from './routes/api/webhooks/creem'
-import { Route as ApiStorageFileRouteImport } from './routes/api/storage/file'
-import { Route as ApiE2eUsersRouteImport } from './routes/api/e2e/users'
+import { Route as legalsPrivacyRouteImport } from './routes/(legals)/privacy'
+import { Route as legalsTermsRouteImport } from './routes/(legals)/terms'
+import { Route as pagesAboutRouteImport } from './routes/(pages)/about'
+import { Route as pagesAiRouteImport } from './routes/(pages)/ai'
+import { Route as pagesChangelogRouteImport } from './routes/(pages)/changelog'
+import { Route as pagesContactRouteImport } from './routes/(pages)/contact'
+import { Route as pagesPricingRouteImport } from './routes/(pages)/pricing'
+import { Route as pagesRoadmapRouteImport } from './routes/(pages)/roadmap'
+import { Route as pagesWaitlistRouteImport } from './routes/(pages)/waitlist'
+import { Route as testsTest404RouteImport } from './routes/(tests)/test-404'
+import { Route as testsTestErrorRouteImport } from './routes/(tests)/test-error'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as ApiPingRouteImport } from './routes/api/ping'
+import { Route as AuthErrorRouteImport } from './routes/auth/error'
+import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
+import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AuthRegisterRouteImport } from './routes/auth/register'
+import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
+import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as SettingsIndexRouteImport } from './routes/settings/index'
+import { Route as SettingsApikeysRouteImport } from './routes/settings/apikeys'
+import { Route as SettingsBillingRouteImport } from './routes/settings/billing'
+import { Route as SettingsFilesRouteImport } from './routes/settings/files'
+import { Route as SettingsNotificationsRouteImport } from './routes/settings/notifications'
+import { Route as SettingsPaymentRouteImport } from './routes/settings/payment'
+import { Route as SettingsProfileRouteImport } from './routes/settings/profile'
+import { Route as SettingsSecurityRouteImport } from './routes/settings/security'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiE2eUsersRouteImport } from './routes/api/e2e/users'
+import { Route as ApiStorageFileRouteImport } from './routes/api/storage/file'
+import { Route as ApiWebhooksCreemRouteImport } from './routes/api/webhooks/creem'
+import { Route as ApiWebhooksStripeRouteImport } from './routes/api/webhooks/stripe'
 
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
-  id: '/robots.txt',
-  path: '/robots.txt',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ManifestDotjsonRoute = ManifestDotjsonRouteImport.update({
-  id: '/manifest.json',
-  path: '/manifest.json',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -89,159 +64,34 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SettingsIndexRoute = SettingsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => SettingsRoute,
-} as any)
-const DashboardIndexRoute = DashboardIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const BlogIndexRoute = BlogIndexRouteImport.update({
-  id: '/blog/',
-  path: '/blog/',
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminRoute,
-} as any)
-const SettingsSecurityRoute = SettingsSecurityRouteImport.update({
-  id: '/security',
-  path: '/security',
-  getParentRoute: () => SettingsRoute,
-} as any)
-const SettingsProfileRoute = SettingsProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => SettingsRoute,
-} as any)
-const SettingsPaymentRoute = SettingsPaymentRouteImport.update({
-  id: '/payment',
-  path: '/payment',
-  getParentRoute: () => SettingsRoute,
-} as any)
-const SettingsNotificationsRoute = SettingsNotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
-  getParentRoute: () => SettingsRoute,
-} as any)
-const SettingsFilesRoute = SettingsFilesRouteImport.update({
-  id: '/files',
-  path: '/files',
-  getParentRoute: () => SettingsRoute,
-} as any)
-const SettingsBillingRoute = SettingsBillingRouteImport.update({
-  id: '/billing',
-  path: '/billing',
-  getParentRoute: () => SettingsRoute,
-} as any)
-const SettingsApikeysRoute = SettingsApikeysRouteImport.update({
-  id: '/apikeys',
-  path: '/apikeys',
-  getParentRoute: () => SettingsRoute,
-} as any)
-const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/blog/$slug',
-  path: '/blog/$slug',
+const ManifestDotjsonRoute = ManifestDotjsonRouteImport.update({
+  id: '/manifest.json',
+  path: '/manifest.json',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthRegisterRoute = AuthRegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
-  id: '/forgot-password',
-  path: '/forgot-password',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthErrorRoute = AuthErrorRouteImport.update({
-  id: '/error',
-  path: '/error',
-  getParentRoute: () => AuthRoute,
-} as any)
-const ApiPingRoute = ApiPingRouteImport.update({
-  id: '/api/ping',
-  path: '/api/ping',
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminUsersRoute = AdminUsersRouteImport.update({
-  id: '/users',
-  path: '/users',
-  getParentRoute: () => AdminRoute,
-} as any)
-const testsTestErrorRoute = testsTestErrorRouteImport.update({
-  id: '/(tests)/test-error',
-  path: '/test-error',
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
-const testsTest404Route = testsTest404RouteImport.update({
-  id: '/(tests)/test-404',
-  path: '/test-404',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const pagesWaitlistRoute = pagesWaitlistRouteImport.update({
-  id: '/(pages)/waitlist',
-  path: '/waitlist',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const pagesRoadmapRoute = pagesRoadmapRouteImport.update({
-  id: '/(pages)/roadmap',
-  path: '/roadmap',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const pagesPricingRoute = pagesPricingRouteImport.update({
-  id: '/(pages)/pricing',
-  path: '/pricing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const pagesContactRoute = pagesContactRouteImport.update({
-  id: '/(pages)/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const pagesChangelogRoute = pagesChangelogRouteImport.update({
-  id: '/(pages)/changelog',
-  path: '/changelog',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const pagesAiRoute = pagesAiRouteImport.update({
-  id: '/(pages)/ai',
-  path: '/ai',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const pagesAboutRoute = pagesAboutRouteImport.update({
-  id: '/(pages)/about',
-  path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const legalsTermsRoute = legalsTermsRouteImport.update({
-  id: '/(legals)/terms',
-  path: '/terms',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const legalsPrivacyRoute = legalsPrivacyRouteImport.update({
-  id: '/(legals)/privacy',
-  path: '/privacy',
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const legalsCookieRoute = legalsCookieRouteImport.update({
@@ -249,19 +99,159 @@ const legalsCookieRoute = legalsCookieRouteImport.update({
   path: '/cookie',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiWebhooksStripeRoute = ApiWebhooksStripeRouteImport.update({
-  id: '/api/webhooks/stripe',
-  path: '/api/webhooks/stripe',
+const legalsPrivacyRoute = legalsPrivacyRouteImport.update({
+  id: '/(legals)/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiWebhooksCreemRoute = ApiWebhooksCreemRouteImport.update({
-  id: '/api/webhooks/creem',
-  path: '/api/webhooks/creem',
+const legalsTermsRoute = legalsTermsRouteImport.update({
+  id: '/(legals)/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiStorageFileRoute = ApiStorageFileRouteImport.update({
-  id: '/api/storage/file',
-  path: '/api/storage/file',
+const pagesAboutRoute = pagesAboutRouteImport.update({
+  id: '/(pages)/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const pagesAiRoute = pagesAiRouteImport.update({
+  id: '/(pages)/ai',
+  path: '/ai',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const pagesChangelogRoute = pagesChangelogRouteImport.update({
+  id: '/(pages)/changelog',
+  path: '/changelog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const pagesContactRoute = pagesContactRouteImport.update({
+  id: '/(pages)/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const pagesPricingRoute = pagesPricingRouteImport.update({
+  id: '/(pages)/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const pagesRoadmapRoute = pagesRoadmapRouteImport.update({
+  id: '/(pages)/roadmap',
+  path: '/roadmap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const pagesWaitlistRoute = pagesWaitlistRouteImport.update({
+  id: '/(pages)/waitlist',
+  path: '/waitlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const testsTest404Route = testsTest404RouteImport.update({
+  id: '/(tests)/test-404',
+  path: '/test-404',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const testsTestErrorRoute = testsTestErrorRouteImport.update({
+  id: '/(tests)/test-error',
+  path: '/test-error',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const ApiPingRoute = ApiPingRouteImport.update({
+  id: '/api/ping',
+  path: '/api/ping',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthErrorRoute = AuthErrorRouteImport.update({
+  id: '/error',
+  path: '/error',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthRegisterRoute = AuthRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthRoute,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const SettingsIndexRoute = SettingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SettingsRoute,
+} as any)
+const SettingsApikeysRoute = SettingsApikeysRouteImport.update({
+  id: '/apikeys',
+  path: '/apikeys',
+  getParentRoute: () => SettingsRoute,
+} as any)
+const SettingsBillingRoute = SettingsBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => SettingsRoute,
+} as any)
+const SettingsFilesRoute = SettingsFilesRouteImport.update({
+  id: '/files',
+  path: '/files',
+  getParentRoute: () => SettingsRoute,
+} as any)
+const SettingsNotificationsRoute = SettingsNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => SettingsRoute,
+} as any)
+const SettingsPaymentRoute = SettingsPaymentRouteImport.update({
+  id: '/payment',
+  path: '/payment',
+  getParentRoute: () => SettingsRoute,
+} as any)
+const SettingsProfileRoute = SettingsProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => SettingsRoute,
+} as any)
+const SettingsSecurityRoute = SettingsSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => SettingsRoute,
+} as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiE2eUsersRoute = ApiE2eUsersRouteImport.update({
@@ -269,9 +259,19 @@ const ApiE2eUsersRoute = ApiE2eUsersRouteImport.update({
   path: '/api/e2e/users',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
-  id: '/api/auth/$',
-  path: '/api/auth/$',
+const ApiStorageFileRoute = ApiStorageFileRouteImport.update({
+  id: '/api/storage/file',
+  path: '/api/storage/file',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWebhooksCreemRoute = ApiWebhooksCreemRouteImport.update({
+  id: '/api/webhooks/creem',
+  path: '/api/webhooks/creem',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWebhooksStripeRoute = ApiWebhooksStripeRouteImport.update({
+  id: '/api/webhooks/stripe',
+  path: '/api/webhooks/stripe',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -582,46 +582,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/robots.txt': {
-      id: '/robots.txt'
-      path: '/robots.txt'
-      fullPath: '/robots.txt'
-      preLoaderRoute: typeof RobotsDottxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/manifest.json': {
-      id: '/manifest.json'
-      path: '/manifest.json'
-      fullPath: '/manifest.json'
-      preLoaderRoute: typeof ManifestDotjsonRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -631,221 +596,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/settings/': {
-      id: '/settings/'
-      path: '/'
-      fullPath: '/settings/'
-      preLoaderRoute: typeof SettingsIndexRouteImport
-      parentRoute: typeof SettingsRoute
-    }
-    '/dashboard/': {
-      id: '/dashboard/'
-      path: '/'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof DashboardIndexRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/blog/': {
-      id: '/blog/'
-      path: '/blog'
-      fullPath: '/blog/'
-      preLoaderRoute: typeof BlogIndexRouteImport
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/': {
-      id: '/admin/'
-      path: '/'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/settings/security': {
-      id: '/settings/security'
-      path: '/security'
-      fullPath: '/settings/security'
-      preLoaderRoute: typeof SettingsSecurityRouteImport
-      parentRoute: typeof SettingsRoute
-    }
-    '/settings/profile': {
-      id: '/settings/profile'
-      path: '/profile'
-      fullPath: '/settings/profile'
-      preLoaderRoute: typeof SettingsProfileRouteImport
-      parentRoute: typeof SettingsRoute
-    }
-    '/settings/payment': {
-      id: '/settings/payment'
-      path: '/payment'
-      fullPath: '/settings/payment'
-      preLoaderRoute: typeof SettingsPaymentRouteImport
-      parentRoute: typeof SettingsRoute
-    }
-    '/settings/notifications': {
-      id: '/settings/notifications'
-      path: '/notifications'
-      fullPath: '/settings/notifications'
-      preLoaderRoute: typeof SettingsNotificationsRouteImport
-      parentRoute: typeof SettingsRoute
-    }
-    '/settings/files': {
-      id: '/settings/files'
-      path: '/files'
-      fullPath: '/settings/files'
-      preLoaderRoute: typeof SettingsFilesRouteImport
-      parentRoute: typeof SettingsRoute
-    }
-    '/settings/billing': {
-      id: '/settings/billing'
-      path: '/billing'
-      fullPath: '/settings/billing'
-      preLoaderRoute: typeof SettingsBillingRouteImport
-      parentRoute: typeof SettingsRoute
-    }
-    '/settings/apikeys': {
-      id: '/settings/apikeys'
-      path: '/apikeys'
-      fullPath: '/settings/apikeys'
-      preLoaderRoute: typeof SettingsApikeysRouteImport
-      parentRoute: typeof SettingsRoute
-    }
-    '/blog/$slug': {
-      id: '/blog/$slug'
-      path: '/blog/$slug'
-      fullPath: '/blog/$slug'
-      preLoaderRoute: typeof BlogSlugRouteImport
+    '/manifest.json': {
+      id: '/manifest.json'
+      path: '/manifest.json'
+      fullPath: '/manifest.json'
+      preLoaderRoute: typeof ManifestDotjsonRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth/reset-password': {
-      id: '/auth/reset-password'
-      path: '/reset-password'
-      fullPath: '/auth/reset-password'
-      preLoaderRoute: typeof AuthResetPasswordRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/auth/register': {
-      id: '/auth/register'
-      path: '/register'
-      fullPath: '/auth/register'
-      preLoaderRoute: typeof AuthRegisterRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/auth/login': {
-      id: '/auth/login'
-      path: '/login'
-      fullPath: '/auth/login'
-      preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/auth/forgot-password': {
-      id: '/auth/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/auth/forgot-password'
-      preLoaderRoute: typeof AuthForgotPasswordRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/auth/error': {
-      id: '/auth/error'
-      path: '/error'
-      fullPath: '/auth/error'
-      preLoaderRoute: typeof AuthErrorRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/api/ping': {
-      id: '/api/ping'
-      path: '/api/ping'
-      fullPath: '/api/ping'
-      preLoaderRoute: typeof ApiPingRouteImport
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/users': {
-      id: '/admin/users'
-      path: '/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AdminUsersRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/(tests)/test-error': {
-      id: '/(tests)/test-error'
-      path: '/test-error'
-      fullPath: '/test-error'
-      preLoaderRoute: typeof testsTestErrorRouteImport
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(tests)/test-404': {
-      id: '/(tests)/test-404'
-      path: '/test-404'
-      fullPath: '/test-404'
-      preLoaderRoute: typeof testsTest404RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(pages)/waitlist': {
-      id: '/(pages)/waitlist'
-      path: '/waitlist'
-      fullPath: '/waitlist'
-      preLoaderRoute: typeof pagesWaitlistRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(pages)/roadmap': {
-      id: '/(pages)/roadmap'
-      path: '/roadmap'
-      fullPath: '/roadmap'
-      preLoaderRoute: typeof pagesRoadmapRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(pages)/pricing': {
-      id: '/(pages)/pricing'
-      path: '/pricing'
-      fullPath: '/pricing'
-      preLoaderRoute: typeof pagesPricingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(pages)/contact': {
-      id: '/(pages)/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof pagesContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(pages)/changelog': {
-      id: '/(pages)/changelog'
-      path: '/changelog'
-      fullPath: '/changelog'
-      preLoaderRoute: typeof pagesChangelogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(pages)/ai': {
-      id: '/(pages)/ai'
-      path: '/ai'
-      fullPath: '/ai'
-      preLoaderRoute: typeof pagesAiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(pages)/about': {
-      id: '/(pages)/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof pagesAboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(legals)/terms': {
-      id: '/(legals)/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof legalsTermsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(legals)/privacy': {
-      id: '/(legals)/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof legalsPrivacyRouteImport
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(legals)/cookie': {
@@ -855,25 +645,221 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof legalsCookieRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/webhooks/stripe': {
-      id: '/api/webhooks/stripe'
-      path: '/api/webhooks/stripe'
-      fullPath: '/api/webhooks/stripe'
-      preLoaderRoute: typeof ApiWebhooksStripeRouteImport
+    '/(legals)/privacy': {
+      id: '/(legals)/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof legalsPrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/webhooks/creem': {
-      id: '/api/webhooks/creem'
-      path: '/api/webhooks/creem'
-      fullPath: '/api/webhooks/creem'
-      preLoaderRoute: typeof ApiWebhooksCreemRouteImport
+    '/(legals)/terms': {
+      id: '/(legals)/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof legalsTermsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/storage/file': {
-      id: '/api/storage/file'
-      path: '/api/storage/file'
-      fullPath: '/api/storage/file'
-      preLoaderRoute: typeof ApiStorageFileRouteImport
+    '/(pages)/about': {
+      id: '/(pages)/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof pagesAboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(pages)/ai': {
+      id: '/(pages)/ai'
+      path: '/ai'
+      fullPath: '/ai'
+      preLoaderRoute: typeof pagesAiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(pages)/changelog': {
+      id: '/(pages)/changelog'
+      path: '/changelog'
+      fullPath: '/changelog'
+      preLoaderRoute: typeof pagesChangelogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(pages)/contact': {
+      id: '/(pages)/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof pagesContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(pages)/pricing': {
+      id: '/(pages)/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof pagesPricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(pages)/roadmap': {
+      id: '/(pages)/roadmap'
+      path: '/roadmap'
+      fullPath: '/roadmap'
+      preLoaderRoute: typeof pagesRoadmapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(pages)/waitlist': {
+      id: '/(pages)/waitlist'
+      path: '/waitlist'
+      fullPath: '/waitlist'
+      preLoaderRoute: typeof pagesWaitlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(tests)/test-404': {
+      id: '/(tests)/test-404'
+      path: '/test-404'
+      fullPath: '/test-404'
+      preLoaderRoute: typeof testsTest404RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(tests)/test-error': {
+      id: '/(tests)/test-error'
+      path: '/test-error'
+      fullPath: '/test-error'
+      preLoaderRoute: typeof testsTestErrorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/api/ping': {
+      id: '/api/ping'
+      path: '/api/ping'
+      fullPath: '/api/ping'
+      preLoaderRoute: typeof ApiPingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/error': {
+      id: '/auth/error'
+      path: '/error'
+      fullPath: '/auth/error'
+      preLoaderRoute: typeof AuthErrorRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/auth/forgot-password': {
+      id: '/auth/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/auth/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/auth/login': {
+      id: '/auth/login'
+      path: '/login'
+      fullPath: '/auth/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/auth/register': {
+      id: '/auth/register'
+      path: '/register'
+      fullPath: '/auth/register'
+      preLoaderRoute: typeof AuthRegisterRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/settings/': {
+      id: '/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof SettingsIndexRouteImport
+      parentRoute: typeof SettingsRoute
+    }
+    '/settings/apikeys': {
+      id: '/settings/apikeys'
+      path: '/apikeys'
+      fullPath: '/settings/apikeys'
+      preLoaderRoute: typeof SettingsApikeysRouteImport
+      parentRoute: typeof SettingsRoute
+    }
+    '/settings/billing': {
+      id: '/settings/billing'
+      path: '/billing'
+      fullPath: '/settings/billing'
+      preLoaderRoute: typeof SettingsBillingRouteImport
+      parentRoute: typeof SettingsRoute
+    }
+    '/settings/files': {
+      id: '/settings/files'
+      path: '/files'
+      fullPath: '/settings/files'
+      preLoaderRoute: typeof SettingsFilesRouteImport
+      parentRoute: typeof SettingsRoute
+    }
+    '/settings/notifications': {
+      id: '/settings/notifications'
+      path: '/notifications'
+      fullPath: '/settings/notifications'
+      preLoaderRoute: typeof SettingsNotificationsRouteImport
+      parentRoute: typeof SettingsRoute
+    }
+    '/settings/payment': {
+      id: '/settings/payment'
+      path: '/payment'
+      fullPath: '/settings/payment'
+      preLoaderRoute: typeof SettingsPaymentRouteImport
+      parentRoute: typeof SettingsRoute
+    }
+    '/settings/profile': {
+      id: '/settings/profile'
+      path: '/profile'
+      fullPath: '/settings/profile'
+      preLoaderRoute: typeof SettingsProfileRouteImport
+      parentRoute: typeof SettingsRoute
+    }
+    '/settings/security': {
+      id: '/settings/security'
+      path: '/security'
+      fullPath: '/settings/security'
+      preLoaderRoute: typeof SettingsSecurityRouteImport
+      parentRoute: typeof SettingsRoute
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/e2e/users': {
@@ -883,11 +869,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiE2eUsersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/auth/$': {
-      id: '/api/auth/$'
-      path: '/api/auth/$'
-      fullPath: '/api/auth/$'
-      preLoaderRoute: typeof ApiAuthSplatRouteImport
+    '/api/storage/file': {
+      id: '/api/storage/file'
+      path: '/api/storage/file'
+      fullPath: '/api/storage/file'
+      preLoaderRoute: typeof ApiStorageFileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/webhooks/creem': {
+      id: '/api/webhooks/creem'
+      path: '/api/webhooks/creem'
+      fullPath: '/api/webhooks/creem'
+      preLoaderRoute: typeof ApiWebhooksCreemRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/webhooks/stripe': {
+      id: '/api/webhooks/stripe'
+      path: '/api/webhooks/stripe'
+      fullPath: '/api/webhooks/stripe'
+      preLoaderRoute: typeof ApiWebhooksStripeRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
