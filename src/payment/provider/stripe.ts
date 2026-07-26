@@ -968,7 +968,10 @@ export class StripeProvider implements PaymentProvider {
    * @param recordType Type for logging ("subscription" or "one-time")
    */
   private async insertPaymentRecord(
-    paymentData: Record<string, any>,
+    paymentData: Omit<
+      typeof payment.$inferInsert,
+      'id' | 'createdAt' | 'updatedAt'
+    >,
     recordType: string
   ): Promise<void> {
     const currentDate = new Date();
