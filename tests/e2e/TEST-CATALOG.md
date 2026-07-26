@@ -150,6 +150,34 @@ These flows should be added after their dependencies are made deterministic:
 
 | Area | Reason |
 |---|---|
-| Payment checkout and portal | Requires Stripe or Creem test fixtures, webhook simulation, and provider-specific env. |
 | Transactional email | Requires a fake mail provider or captured verification links. |
 | AI tools | Requires provider mocks or stable fake responses to avoid cost and flake. |
+
+## Stripe Payment Coverage
+
+Stripe payment tests use two layers. Creem is intentionally excluded.
+
+### Fast webhook layer
+
+**File:** `tests/unit/payment/stripe-webhook.test.ts`
+
+Runs inside `pnpm check` with a Stripe SDK-generated test signature. It verifies
+invalid signature rejection, a signed one-time Checkout event, and D1 duplicate
+invoice idempotency without making network requests.
+
+### Sandbox E2E layer
+
+**File:** `tests/e2e/stripe/stripe-sandbox.spec.ts`
+
+Run explicitly with `pnpm e2e:stripe`. The runner refuses live keys, starts a
+Stripe CLI listener, forwards real sandbox events to the local Worker, and uses
+Playwright to complete hosted Checkout with Stripe's success test card.
+
+| # | Test name | Flow |
+|---|---|---|
+| 1 | Monthly subscription and portal | Register and sign in, create a real monthly Checkout Session, complete sandbox Checkout, receive real webhooks through Stripe CLI, verify the Pro plan and Stripe subscription price, then open Customer Portal. |
+| 2 | Yearly subscription | Register and sign in, select yearly pricing, complete sandbox Checkout, verify the Pro plan and yearly Stripe price. |
+| 3 | Lifetime payment | Register and sign in, complete a one-time sandbox Checkout, verify the Lifetime plan and Stripe line-item price. |
+
+The sandbox suite does not cover failed cards, cancellation, refunds, renewals,
+or Test Clocks.

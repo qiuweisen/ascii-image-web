@@ -383,7 +383,9 @@ export class StripeProvider implements PaymentProvider {
         }
       }
     } catch (error) {
-      console.error('handle webhook event error:', error);
+      const errorMessage =
+        error instanceof Error ? `${error.name}: ${error.message}` : 'Unknown';
+      console.error('handle webhook event error:', errorMessage);
       throw new Error('Failed to handle webhook event');
     }
   }
@@ -518,7 +520,7 @@ export class StripeProvider implements PaymentProvider {
       // Check if it's a duplicate invoice error (database constraint violation)
       if (
         error instanceof Error &&
-        error.message.includes('unique constraint')
+        error.message.toLowerCase().includes('unique constraint')
       ) {
         console.log('<< Invoice already processed:', invoice.id);
         return; // Don't throw, this is expected for duplicate processing
@@ -985,7 +987,7 @@ export class StripeProvider implements PaymentProvider {
       // Handle duplicate key constraint violation gracefully
       if (
         error instanceof Error &&
-        error.message.includes('unique constraint')
+        error.message.toLowerCase().includes('unique constraint')
       ) {
         console.log(
           `<< ${recordType} payment record already exists, skipping creation`

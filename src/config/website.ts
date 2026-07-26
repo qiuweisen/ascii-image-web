@@ -81,7 +81,7 @@ export const websiteConfig: WebsiteConfig = {
     autoSubscribeAfterSignUp: true,
   },
   notification: {
-    enable: true,
+    enable: import.meta.env.MODE !== 'e2e',
     provider: 'discord',
   },
   cache: {
