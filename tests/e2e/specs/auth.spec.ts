@@ -84,5 +84,16 @@ test.describe('authentication and protected routes', () => {
     await expect(
       page.getByRole('table').getByText(user.email).first()
     ).toBeVisible();
+
+    await page
+      .getByRole('table')
+      .getByRole('button', { name: user.name })
+      .click();
+    const userDrawer = page.getByRole('dialog');
+    await expect(
+      userDrawer.getByRole('heading', { name: user.name })
+    ).toBeVisible();
+    await userDrawer.getByRole('button', { name: /close|关闭/i }).click();
+    await expect(userDrawer).toBeHidden();
   });
 });

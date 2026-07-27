@@ -599,11 +599,16 @@ const chartConfig = {
 function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
   const isMobile = useIsMobile();
   return (
-    <Drawer direction={isMobile ? 'bottom' : 'right'}>
-      <DrawerTrigger asChild>
-        <Button variant="link" className="text-foreground w-fit px-0 text-left">
-          {item.header}
-        </Button>
+    <Drawer swipeDirection={isMobile ? 'down' : 'right'}>
+      <DrawerTrigger
+        render={
+          <Button
+            variant="link"
+            className="text-foreground w-fit px-0 text-left"
+          />
+        }
+      >
+        {item.header}
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="gap-1">
@@ -780,9 +785,7 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
         </div>
         <DrawerFooter>
           <Button>Submit</Button>
-          <DrawerClose asChild>
-            <Button variant="outline">Close</Button>
-          </DrawerClose>
+          <DrawerClose render={<Button variant="outline" />}>Close</DrawerClose>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

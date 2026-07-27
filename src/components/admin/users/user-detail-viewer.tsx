@@ -90,22 +90,24 @@ export function UserDetailViewer({ user }: UserDetailViewerProps) {
     }
   };
   return (
-    <Drawer direction={isMobile ? 'bottom' : 'right'}>
+    <Drawer swipeDirection={isMobile ? 'down' : 'right'}>
       <div className="flex items-center gap-2">
         <UserAvatar
           name={user.name ?? null}
           image={user.image ?? null}
           className="size-8 shrink-0 border"
         />
-        <DrawerTrigger asChild>
-          <Button
-            variant="link"
-            className="w-fit px-0 text-left text-foreground"
-          >
-            <span className="font-medium hover:underline hover:underline-offset-4">
-              {user.name}
-            </span>
-          </Button>
+        <DrawerTrigger
+          render={
+            <Button
+              variant="link"
+              className="w-fit px-0 text-left text-foreground"
+            />
+          }
+        >
+          <span className="font-medium hover:underline hover:underline-offset-4">
+            {user.name}
+          </span>
         </DrawerTrigger>
       </div>
       <DrawerContent>
@@ -289,8 +291,8 @@ export function UserDetailViewer({ user }: UserDetailViewerProps) {
               {m.admin_users_ban_button()}
             </Button>
           )}
-          <DrawerClose asChild>
-            <Button variant="outline">{m.admin_users_close()}</Button>
+          <DrawerClose render={<Button variant="outline" />}>
+            {m.admin_users_close()}
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
