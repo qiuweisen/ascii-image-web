@@ -25,11 +25,6 @@ import {
   locales,
 } from '@/lib/locale';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { lazy } from 'react';
-
-const DevTools = import.meta.env.DEV
-  ? lazy(() => import('@/integrations/devtools'))
-  : () => null;
 
 /**
  * https://github.com/backpine/tanstack-start-on-cloudflare/blob/main/src/routes/__root.tsx
@@ -179,7 +174,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             <Toaster richColors position="top-right" offset={64} />
           </TooltipProvider>
         </ThemeProvider>
-        <DevTools />
         <Analytics />
         <CrispChat />
         <Scripts />
