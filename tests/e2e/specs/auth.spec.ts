@@ -84,5 +84,44 @@ test.describe('authentication and protected routes', () => {
     await expect(
       page.getByRole('table').getByText(user.email).first()
     ).toBeVisible();
+
+    await page
+      .getByRole('table')
+      .getByRole('button', { name: user.name })
+      .click();
+    const userDrawer = page.getByRole('dialog');
+    await expect(
+      userDrawer.getByRole('heading', { name: user.name })
+    ).toBeVisible();
+
+    const drawerHeader = userDrawer.locator('[data-slot="drawer-header"]');
+    const roleBadge = userDrawer.getByText(/admin|管理员/i, { exact: true });
+    const emailLabel = userDrawer.getByText(/^(email|邮箱):$/i);
+    const emailValue = userDrawer.getByText(user.email, { exact: true });
+    const [headerBox, roleBox, emailLabelBox, emailValueBox] =
+      await Promise.all([
+        drawerHeader.boundingBox(),
+        roleBadge.boundingBox(),
+        emailLabel.boundingBox(),
+        emailValue.boundingBox(),
+      ]);
+
+    expect(headerBox).not.toBeNull();
+    expect(roleBox).not.toBeNull();
+    expect(emailLabelBox).not.toBeNull();
+    expect(emailValueBox).not.toBeNull();
+    expect(
+      (roleBox?.y ?? 0) - ((headerBox?.y ?? 0) + (headerBox?.height ?? 0))
+    ).toBeGreaterThanOrEqual(12);
+    expect(
+      Math.abs(
+        (emailLabelBox?.y ?? 0) +
+          (emailLabelBox?.height ?? 0) / 2 -
+          ((emailValueBox?.y ?? 0) + (emailValueBox?.height ?? 0) / 2)
+      )
+    ).toBeLessThanOrEqual(2);
+
+    await userDrawer.getByRole('button', { name: /close|关闭/i }).click();
+    await expect(userDrawer).toBeHidden();
   });
 });

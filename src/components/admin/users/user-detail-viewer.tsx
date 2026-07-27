@@ -90,22 +90,24 @@ export function UserDetailViewer({ user }: UserDetailViewerProps) {
     }
   };
   return (
-    <Drawer direction={isMobile ? 'bottom' : 'right'}>
+    <Drawer swipeDirection={isMobile ? 'down' : 'right'}>
       <div className="flex items-center gap-2">
         <UserAvatar
           name={user.name ?? null}
           image={user.image ?? null}
           className="size-8 shrink-0 border"
         />
-        <DrawerTrigger asChild>
-          <Button
-            variant="link"
-            className="w-fit px-0 text-left text-foreground"
-          >
-            <span className="font-medium hover:underline hover:underline-offset-4">
-              {user.name}
-            </span>
-          </Button>
+        <DrawerTrigger
+          render={
+            <Button
+              variant="link"
+              className="w-fit px-0 text-left text-foreground"
+            />
+          }
+        >
+          <span className="font-medium hover:underline hover:underline-offset-4">
+            {user.name}
+          </span>
         </DrawerTrigger>
       </div>
       <DrawerContent>
@@ -119,7 +121,7 @@ export function UserDetailViewer({ user }: UserDetailViewerProps) {
             <DrawerTitle>{user.name}</DrawerTitle>
           </div>
         </DrawerHeader>
-        <div className="flex flex-col gap-4 overflow-y-auto px-4 text-sm">
+        <div className="flex flex-col gap-4 overflow-y-auto px-4 pt-4 text-sm">
           <div className="grid gap-4">
             <div className="flex flex-wrap items-center gap-2">
               <Badge
@@ -158,13 +160,13 @@ export function UserDetailViewer({ user }: UserDetailViewerProps) {
               </Badge>
             </div>
             {user.email && (
-              <div className="grid gap-3">
-                <span className="text-xs text-muted-foreground">
+              <div className="flex items-center gap-3">
+                <span className="shrink-0 text-xs text-muted-foreground">
                   {m.admin_users_columns_email()}:
                 </span>
                 <Badge
                   variant="outline"
-                  className="w-fit px-1.5 py-2 text-sm border-transparent hover:cursor-pointer hover:underline hover:underline-offset-4"
+                  className="ml-auto min-w-0 max-w-[calc(100%-4rem)] px-1.5 py-2 text-sm border-transparent hover:cursor-pointer hover:underline hover:underline-offset-4"
                   onClick={() => {
                     navigator.clipboard.writeText(user.email);
                     toast.success(m.admin_users_email_copied());
@@ -175,7 +177,7 @@ export function UserDetailViewer({ user }: UserDetailViewerProps) {
                   ) : (
                     <IconMailQuestion className="stroke-red-500 dark:stroke-red-400" />
                   )}
-                  {user.email}
+                  <span className="truncate">{user.email}</span>
                 </Badge>
               </div>
             )}
@@ -289,8 +291,8 @@ export function UserDetailViewer({ user }: UserDetailViewerProps) {
               {m.admin_users_ban_button()}
             </Button>
           )}
-          <DrawerClose asChild>
-            <Button variant="outline">{m.admin_users_close()}</Button>
+          <DrawerClose render={<Button variant="outline" />}>
+            {m.admin_users_close()}
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
