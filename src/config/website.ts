@@ -38,15 +38,10 @@ export const websiteConfig: WebsiteConfig = {
     },
   },
   metadata: {
-    get name() {
-      return m.site_name();
-    },
-    get title() {
-      return m.site_title();
-    },
-    get description() {
-      return m.site_description();
-    },
+    name: 'ASCII Image',
+    title: 'Image to ASCII - Convert Images to ASCII Art Free',
+    description:
+      'Turn images into copyable ASCII art in your browser. Adjust character density, contrast, and style locally with no upload or signup.',
     images: {
       ogImage: '/og.png',
       logoLight: '/logo.png',
@@ -54,7 +49,7 @@ export const websiteConfig: WebsiteConfig = {
     },
   },
   social: {
-    github: 'https://github.com/MkFastHQ',
+    github: 'https://github.com/qiuweisen/ascii-image-web',
     discord: 'https://mksaas.link/discord',
     twitter: 'https://x.com/TanStarter',
     youtube: 'https://www.youtube.com/@TanStarter',

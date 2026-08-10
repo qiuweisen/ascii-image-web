@@ -8,8 +8,9 @@ import { createFileRoute } from '@tanstack/react-router';
 export const Route = createFileRoute('/')({
   head: () => {
     const name = websiteConfig.metadata?.name ?? '';
-    const title = websiteConfig.metadata?.title ?? '';
-    const description = websiteConfig.metadata?.description ?? '';
+    const title = 'Image to ASCII - Convert Images to ASCII Art Free';
+    const description =
+      'Turn images into copyable ASCII art in your browser. Adjust character density, contrast, and style locally with no upload or signup.';
     const url = getCanonicalUrl('/');
     const inLanguage = localeConfig[getLocale()].hreflang;
     const webSiteJsonLd = {

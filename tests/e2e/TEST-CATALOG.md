@@ -55,6 +55,15 @@ browser console errors or page errors.
 | 2 | Home login modal opens | Open `/`, click the navbar login button, verify the login dialog and credential inputs are visible, and assert no browser errors. |
 | 3 | Health check responds with pong | Call `/api/ping` and verify `{ "message": "pong" }`. |
 
+## Product: ASCII Converter
+
+**File:** `specs/ascii-converter.spec.ts` | **Priority:** P0
+
+| # | Test name | Flow |
+|---|---|---|
+| 1 | Demo output responds to controls | Open `/`, verify the local demo output, switch character ramp, change width, and confirm output changes without a network upload. |
+| 2 | Line art can be filtered and copied | Open `/line-art`, filter to Animals, search for a cat, copy the matching one-line piece, and verify clipboard contents. |
+
 ## 2. Authentication And Protected Routes
 
 **File:** `specs/auth.spec.ts` | **Priority:** P0

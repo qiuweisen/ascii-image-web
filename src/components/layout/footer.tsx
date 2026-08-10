@@ -24,7 +24,7 @@ export function Footer({ className }: React.HTMLAttributes<HTMLElement>) {
               </span>
             </div>
             <p className="text-muted-foreground text-base py-2 md:pr-12">
-              {m.footer_tagline()}
+              Browser-local ASCII art. No upload, no account, no noise.
             </p>
             <nav
               aria-label={m.common_social_links()}
