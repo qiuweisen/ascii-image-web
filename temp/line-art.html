@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="生成可复制的单行 ASCII 字符画，支持动物、人物、表情和物品分类。" />
+  <title>单行 ASCII 字符画生成器 · asciiimage.com</title>
+  <style>
+    :root {
+      --bg: oklch(0.1457 0.0043 285.9);
+      --surface: oklch(0.1703 0.0083 285.5);
+      --fg: oklch(0.8716 0.2785 142.7);
+      --muted: oklch(0.7093 0.0014 286.4);
+      --border: oklch(0.2835 0.0427 199.9);
+      --accent: oklch(0.7788 0.1727 66.6);
+      --accent-soft: color-mix(in oklch, var(--accent) 15%, transparent);
+      --fg-soft: color-mix(in oklch, var(--fg) 7%, transparent);
+      --font-display: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+      --font-body: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+      --font-mono: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+      --container: 1180px;
+      --gutter: 28px;
+      --radius: 6px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { color-scheme: dark; -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); line-height: 1.55; overflow-x: hidden; }
+    body::before { content: ""; position: fixed; inset: 0; z-index: 100; pointer-events: none; background: repeating-linear-gradient(0deg, transparent 0 2px, color-mix(in oklch, var(--bg) 68%, transparent) 2px 3px); opacity: .34; }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+    h1, h2, h3 { font-family: var(--font-display); letter-spacing: 0; text-wrap: balance; margin: 0; }
+    p { text-wrap: pretty; }
+    .container { max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
+    .section { padding-block: clamp(54px, 8vw, 96px); border-bottom: 1px dashed var(--border); }
+    .topnav { position: sticky; top: 0; z-index: 20; background: color-mix(in oklch, var(--bg) 88%, transparent); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
+    .topnav-inner { min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .logo { font-weight: 700; }
+    .logo:hover { text-shadow: 0 0 10px color-mix(in oklch, var(--fg) 42%, transparent); }
+    .logo::before { content: "> "; color: var(--muted); }
+    nav { display: flex; align-items: center; gap: 26px; }
+    nav a { color: var(--muted); font-size: 14px; }
+    nav a:hover, nav a[aria-current="page"] { color: var(--fg); }
+    .nav-status { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--fg); box-shadow: 0 0 10px var(--fg); }
+    .eyebrow { margin: 0 0 14px; color: var(--fg); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+    .eyebrow::before { content: "[ "; color: var(--muted); }
+    .eyebrow::after { content: " ]"; color: var(--muted); }
+    h1 { max-width: 17ch; font-size: clamp(40px, 6.2vw, 74px); line-height: 1.02; text-shadow: 0 0 12px color-mix(in oklch, var(--fg) 34%, transparent); }
+    h2 { font-size: clamp(28px, 4vw, 44px); line-height: 1.1; }
+    h3 { font-size: 18px; }
+    .lead { max-width: 56ch; margin: 20px 0 0; color: var(--muted); font-size: 17px; }
+    .hero-head { display: flex; align-items: end; justify-content: space-between; gap: 48px; margin-bottom: 44px; }
+    .route-note { max-width: 35ch; color: var(--muted); font-size: 13px; }
+    .route-note::before { content: "> "; color: var(--fg); }
+    .generator { display: grid; grid-template-columns: minmax(280px, .8fr) minmax(0, 1.3fr); border: 1px solid var(--border); background: var(--surface); box-shadow: 0 24px 70px color-mix(in oklch, var(--bg) 74%, transparent); }
+    .controls { padding: 26px; border-right: 1px solid var(--border); }
+    .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+    .meta { color: var(--muted); font-size: 12px; }
+    .field { display: grid; gap: 9px; }
+    .field label { color: var(--muted); font-size: 13px; }
+    .input { width: 100%; min-height: 48px; border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 13px; color: var(--fg); background: var(--bg); }
+    .input::placeholder { color: var(--muted); }
+    .input:focus { border-color: var(--fg); }
+    .category-label { margin: 26px 0 10px; color: var(--muted); font-size: 13px; }
+    .segments { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .segment { min-height: 44px; border: 1px solid var(--border); border-radius: var(--radius); padding: 8px; color: var(--muted); background: transparent; }
+    .segment:hover { border-color: var(--fg); color: var(--fg); }
+    .segment[aria-pressed="true"] { border-color: var(--fg); color: var(--fg); background: var(--fg-soft); }
+    .hint { margin: 18px 0 0; color: var(--muted); font-size: 12px; }
+    .preview { min-width: 0; display: flex; flex-direction: column; padding: 26px; }
+    .preview-window { flex: 1; min-height: 285px; display: grid; place-items: center; overflow: auto; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--bg); padding: 32px; }
+    #line-output { max-width: 100%; margin: 0; color: var(--fg); font-family: var(--font-mono); font-size: clamp(26px, 4.5vw, 54px); line-height: 1.2; white-space: pre; text-align: center; text-shadow: 0 0 10px color-mix(in oklch, var(--fg) 32%, transparent); }
+    .preview-foot { min-height: 66px; display: flex; align-items: end; justify-content: space-between; gap: 16px; }
+    .result-status { color: var(--muted); font-size: 12px; }
+    .result-status::before { content: "> "; color: var(--fg); }
+    .btn { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid transparent; border-radius: var(--radius); padding: 10px 18px; color: var(--fg); background: transparent; transition: transform .08s ease, background .16s ease, border-color .16s ease; }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 700; }
+    .btn-primary:hover { background: color-mix(in oklch, var(--accent) 86%, white); border-color: color-mix(in oklch, var(--accent) 86%, white); color: var(--bg); }
+    .art-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 40px; }
+    .art-card { min-width: 0; min-height: 126px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; padding: 18px; border: 1px solid var(--border); border-radius: var(--radius); color: var(--fg); background: transparent; text-align: left; }
+    .art-card:hover { border-color: var(--fg); background: var(--fg-soft); }
+    .art-card[aria-current="true"] { border-color: var(--fg); background: var(--fg-soft); }
+    .art-value { max-width: 100%; overflow: hidden; font-size: 21px; white-space: nowrap; text-overflow: ellipsis; }
+    .art-label { color: var(--muted); font-size: 12px; }
+    .empty { grid-column: 1 / -1; padding: 32px; border: 1px dashed var(--border); color: var(--muted); text-align: center; }
+    .split { display: grid; grid-template-columns: 1fr 1.15fr; gap: 72px; align-items: start; }
+    .tips { border-top: 1px solid var(--border); }
+    .tip { display: grid; grid-template-columns: 80px 1fr; gap: 18px; padding: 20px 0; border-bottom: 1px solid var(--border); }
+    .tip-code { color: var(--fg); }
+    .tip p { margin: 0; color: var(--muted); font-size: 14px; }
+    .faq { margin-top: 38px; border-top: 1px solid var(--border); }
+    details { border-bottom: 1px solid var(--border); }
+    summary { min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 18px; cursor: pointer; }
+    summary::after { content: "+"; color: var(--muted); }
+    details[open] summary::after { content: "−"; }
+    details p { max-width: 72ch; margin: 0 0 20px; color: var(--muted); font-size: 14px; }
+    .pagefoot { padding-block: 32px; color: var(--muted); font-size: 12px; }
+    .pagefoot a:hover { color: var(--fg); }
+    .foot-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    @media (max-width: 920px) {
+      :root { --gutter: 20px; }
+      nav { display: none; }
+      .hero-head { display: grid; align-items: start; }
+      .generator, .split { grid-template-columns: 1fr; }
+      .controls { border-right: 0; border-bottom: 1px solid var(--border); }
+      .art-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .nav-status { display: none; }
+      h1 { font-size: 40px; }
+      .art-grid { grid-template-columns: 1fr; }
+      .preview-foot { align-items: stretch; flex-direction: column; padding-top: 16px; }
+      .controls, .preview { padding: 18px; }
+      .segments { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+  </style>
+</head>
+<body>
+  <header class="topnav" data-od-id="topnav">
+    <div class="container topnav-inner">
+      <a class="logo" href="index.html" aria-label="asciiimage.com 首页">asciiimage.com</a>
+      <nav aria-label="主导航">
+        <a href="index.html">图片转换</a>
+        <a href="line-art.html" aria-current="page">单行字符画</a>
+        <a href="#faq">常见问题</a>
+      </nav>
+      <div class="nav-status"><span class="status-dot"></span>本地运行</div>
+    </div>
+  </header>
+
+  <main id="content">
+    <section class="section" data-od-id="line-art-generator">
+      <div class="container">
+        <div class="hero-head">
+          <div>
+            <p class="eyebrow">Line ASCII Art</p>
+            <h1 data-od-id="line-art-heading">一行，也能画出表情。</h1>
+            <p class="lead">输入关键词或选择类别，生成可直接复制的单行 ASCII 字符画。</p>
+          </div>
+          <p class="route-note">适合昵称、状态签名、代码注释和聊天消息。</p>
+        </div>
+
+        <div class="generator">
+          <aside class="controls" aria-label="生成参数">
+            <div class="panel-head"><h3>查找图案</h3><span class="meta">01 / INPUT</span></div>
+            <div class="field">
+              <label for="keyword">输入图案名称</label>
+              <input class="input" id="keyword" data-od-id="line-art-input" type="text" placeholder="例如：猫、爱心、咖啡" autocomplete="off" />
+            </div>
+            <p class="category-label">选择类别</p>
+            <div class="segments" data-od-id="category-filter">
+              <button class="segment" type="button" aria-pressed="true" data-category="全部">全部</button>
+              <button class="segment" type="button" aria-pressed="false" data-category="动物">动物</button>
+              <button class="segment" type="button" aria-pressed="false" data-category="人物">人物</button>
+              <button class="segment" type="button" aria-pressed="false" data-category="表情">表情</button>
+              <button class="segment" type="button" aria-pressed="false" data-category="物品">物品</button>
+            </div>
+            <p class="hint">支持中文或英文关键词。输入时会自动匹配已有图案。</p>
+          </aside>
+
+          <div class="preview">
+            <div class="panel-head"><h3>单行预览</h3><span class="meta">02 / OUTPUT</span></div>
+            <div class="preview-window" aria-live="polite">
+              <pre id="line-output" data-od-id="line-art-output">=^..^=</pre>
+            </div>
+            <div class="preview-foot">
+              <span class="result-status" id="result-status" role="status">当前图案：猫</span>
+              <button class="btn btn-primary" id="copy-line-art" data-od-id="copy-line-art" type="button">复制字符画</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-od-id="popular-line-art">
+      <div class="container">
+        <p class="eyebrow">Pattern library</p>
+        <h2>从一个现成图案开始。</h2>
+        <div class="art-grid" id="art-grid" data-od-id="line-art-grid"></div>
+      </div>
+    </section>
+
+    <section class="section" data-od-id="line-art-uses">
+      <div class="container split">
+        <div>
+          <p class="eyebrow">One line, anywhere</p>
+          <h2>不用担心换行和错位。</h2>
+          <p class="lead">单行字符画比大型 ASCII 图案更容易跨平台分享，也更适合窄屏和短文本场景。</p>
+        </div>
+        <div class="tips">
+          <div class="tip"><span class="tip-code">PROFILE</span><p>放进昵称或个人简介，用最少字符表达情绪。</p></div>
+          <div class="tip"><span class="tip-code">CHAT</span><p>复制到聊天消息，不依赖图片加载和附件权限。</p></div>
+          <div class="tip"><span class="tip-code">CODE</span><p>用于代码注释、提交信息或终端欢迎语。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq" data-od-id="faq">
+      <div class="container">
+        <p class="eyebrow">FAQ</p>
+        <h2>关于单行字符画。</h2>
+        <div class="faq">
+          <details><summary>这些字符画可以免费使用吗？</summary><p>可以。页面中的预设图案可自由复制和修改。</p></details>
+          <details><summary>为什么不同平台显示略有差异？</summary><p>部分图案包含全角或特殊字符，不同字体的字宽可能不同。纯 ASCII 图案通常最稳定。</p></details>
+          <details><summary>输入任意文字都会生成新图案吗？</summary><p>首版会从现有图案库中匹配中英文关键词；没有匹配时会保留当前结果并提示可选类别。</p></details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pagefoot" data-od-id="footer">
+    <div class="container foot-inner"><span>© 2026 asciiimage.com</span><span><a href="index.html">返回图片转 ASCII</a></span></div>
+  </footer>
+
+  <script id="ascii-core">
+    const LINE_ART = [
+      { label: '猫', aliases: ['cat', 'kitty'], category: '动物', art: '=^..^=' },
+      { label: '狗', aliases: ['dog', 'puppy'], category: '动物', art: 'U・ᴥ・U' },
+      { label: '鱼', aliases: ['fish'], category: '动物', art: '<°)))><' },
+      { label: '兔子', aliases: ['rabbit', 'bunny'], category: '动物', art: '(\_/)' },
+      { label: '人物', aliases: ['person', 'human'], category: '人物', art: '(-_-)' },
+      { label: '挥手', aliases: ['wave', 'hello'], category: '人物', art: '(^_^)/' },
+      { label: '奔跑', aliases: ['run', 'running'], category: '人物', art: 'ε=ε=┌(;・_・)┘' },
+      { label: '开心', aliases: ['happy', 'smile'], category: '表情', art: '(^‿^)' },
+      { label: '惊讶', aliases: ['surprised', 'wow'], category: '表情', art: '(O_O)!' },
+      { label: '无奈', aliases: ['shrug'], category: '表情', art: '¯\\_(ツ)_/¯' },
+      { label: '爱心', aliases: ['heart', 'love'], category: '物品', art: '<3' },
+      { label: '咖啡', aliases: ['coffee', 'cup'], category: '物品', art: 'c[_]' },
+      { label: '音乐', aliases: ['music', 'note'], category: '物品', art: '♪┏(・o･)┛♪' },
+      { label: '箭头', aliases: ['arrow'], category: '物品', art: '------->' }
+    ];
+    function filterLineArt(category) {
+      return category === '全部' ? LINE_ART.slice() : LINE_ART.filter(item => item.category === category);
+    }
+    function lineArtFor(keyword) {
+      const value = keyword.trim().toLowerCase();
+      if (!value) return null;
+      return LINE_ART.find(item => item.label.toLowerCase().includes(value) || item.aliases.some(alias => alias.includes(value))) || null;
+    }
+    window.AsciiCore = { filterLineArt, lineArtFor, LINE_ART };
+  </script>
+  <script>
+    (() => {
+      const grid = document.querySelector('#art-grid');
+      const output = document.querySelector('#line-output');
+      const status = document.querySelector('#result-status');
+      const keyword = document.querySelector('#keyword');
+      const segments = [...document.querySelectorAll('.segment')];
+      let active = window.AsciiCore.LINE_ART[0];
+      let category = '全部';
+
+      function choose(item) {
+        active = item;
+        output.textContent = item.art;
+        status.textContent = `当前图案：${item.label}`;
+        [...grid.querySelectorAll('.art-card')].forEach(card => card.setAttribute('aria-current', String(card.dataset.label === item.label)));
+      }
+
+      function renderGrid(items) {
+        grid.replaceChildren();
+        if (!items.length) {
+          const empty = document.createElement('p');
+          empty.className = 'empty';
+          empty.textContent = '没有找到匹配图案。试试“猫”“开心”或切换类别。';
+          grid.append(empty);
+          return;
+        }
+        items.forEach(item => {
+          const card = document.createElement('button');
+          card.className = 'art-card';
+          card.type = 'button';
+          card.dataset.label = item.label;
+          card.setAttribute('aria-current', String(item.label === active.label));
+          card.setAttribute('data-od-id', `line-art-${item.aliases[0]}`);
+          const value = document.createElement('span');
+          value.className = 'art-value';
+          value.textContent = item.art;
+          const label = document.createElement('span');
+          label.className = 'art-label';
+          label.textContent = `${item.category} / ${item.label}`;
+          card.append(value, label);
+          card.addEventListener('click', () => choose(item));
+          grid.append(card);
+        });
+      }
+
+      segments.forEach(button => button.addEventListener('click', () => {
+        category = button.dataset.category;
+        segments.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+        keyword.value = '';
+        const items = window.AsciiCore.filterLineArt(category);
+        renderGrid(items);
+        if (items.length) choose(items[0]);
+      }));
+
+      keyword.addEventListener('input', () => {
+        const query = keyword.value.trim();
+        if (!query) { renderGrid(window.AsciiCore.filterLineArt(category)); status.textContent = `当前图案：${active.label}`; return; }
+        const match = window.AsciiCore.lineArtFor(query);
+        const visible = window.AsciiCore.LINE_ART.filter(item => item.label.includes(query) || item.aliases.some(alias => alias.includes(query.toLowerCase())));
+        renderGrid(visible);
+        if (match) choose(match); else status.textContent = '未找到匹配图案';
+      });
+
+      document.querySelector('#copy-line-art').addEventListener('click', async event => {
+        try { await navigator.clipboard.writeText(output.textContent); event.currentTarget.textContent = '已复制'; status.textContent = '字符画已复制到剪贴板'; }
+        catch { status.textContent = '复制失败，请手动选择字符画'; }
+        setTimeout(() => { event.currentTarget.textContent = '复制字符画'; }, 1600);
+      });
+
+      renderGrid(window.AsciiCore.filterLineArt('全部'));
+    })();
+  </script>
+</body>
+</html>

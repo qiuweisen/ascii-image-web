@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="免费在线图片转 ASCII 字符画工具。在浏览器本地转换、复制并下载文本。" />
+  <title>图片转 ASCII 字符画 · asciiimage.com</title>
+  <style>
+    :root {
+      --bg: oklch(0.1457 0.0043 285.9);
+      --surface: oklch(0.1703 0.0083 285.5);
+      --fg: oklch(0.8716 0.2785 142.7);
+      --muted: oklch(0.7093 0.0014 286.4);
+      --border: oklch(0.2835 0.0427 199.9);
+      --accent: oklch(0.7788 0.1727 66.6);
+      --accent-soft: color-mix(in oklch, var(--accent) 15%, transparent);
+      --fg-soft: color-mix(in oklch, var(--fg) 7%, transparent);
+      --font-display: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+      --font-body: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+      --font-mono: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+      --container: 1460px;
+      --gutter: clamp(20px, 5vw, 76px);
+      --radius: 4px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { color-scheme: dark; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body { margin: 0; overflow-x: hidden; background: var(--bg); color: var(--fg); font-family: var(--font-body); line-height: 1.5; }
+    body::before { content: ""; position: fixed; inset: 0; z-index: 1000; pointer-events: none; background: repeating-linear-gradient(0deg, transparent 0 2px, color-mix(in oklch, var(--bg) 70%, transparent) 2px 3px); opacity: .36; }
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; }
+    button, label[for="file-input"] { cursor: pointer; }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, [role="slider"]:focus-visible, label[for="file-input"]:focus-visible { outline: 2px solid var(--fg); outline-offset: 4px; }
+    h1, h2, h3 { margin: 0; font-family: var(--font-display); letter-spacing: 0; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .container { max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
+    .rails { position: fixed; inset: 0; z-index: 60; max-width: var(--container); margin-inline: auto; pointer-events: none; border-inline: 1px dashed color-mix(in oklch, var(--border) 72%, transparent); }
+    .section { position: relative; padding-block: clamp(72px, 9vw, 132px); border-bottom: 1px dashed var(--border); }
+    .topnav { position: sticky; top: 0; z-index: 80; border-bottom: 1px solid var(--border); background: color-mix(in oklch, var(--bg) 80%, transparent); backdrop-filter: blur(16px); }
+    .topnav-inner { min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+    .logo { font-weight: 750; color: var(--fg); }
+    .logo::before { content: "> "; color: var(--muted); }
+    .logo:hover { text-shadow: 0 0 12px color-mix(in oklch, var(--fg) 45%, transparent); }
+    nav { display: flex; align-items: center; gap: 32px; }
+    nav a { color: var(--muted); font-size: 13px; }
+    nav a:hover, nav a[aria-current="page"] { color: var(--fg); }
+    .open-link { min-height: 44px; display: inline-flex; align-items: center; gap: 10px; color: var(--fg); font-size: 13px; }
+    .open-link::before { content: "▸"; }
+    .open-link:hover { color: var(--accent); }
+    .eyebrow { margin: 0 0 18px; color: var(--fg); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+    .eyebrow::before { content: "/ "; color: var(--muted); }
+    h1 { font-size: clamp(48px, 7.1vw, 108px); line-height: 1.32; text-shadow: 0 0 16px color-mix(in oklch, var(--fg) 32%, transparent); }
+    h2 { font-size: clamp(34px, 4.6vw, 68px); line-height: 1.32; }
+    h3 { font-size: 20px; line-height: 1.35; }
+    .lead { max-width: 62ch; color: var(--muted); font-size: clamp(15px, 1.5vw, 18px); }
+    .btn { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid transparent; border-radius: var(--radius); padding: 11px 20px; color: var(--fg); background: transparent; letter-spacing: .02em; transition: transform .12s ease, background .16s ease, border-color .16s ease; }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { border-color: var(--accent); background: var(--accent); color: var(--bg); font-weight: 750; }
+    .btn-primary:hover { border-color: color-mix(in oklch, var(--accent) 85%, white); background: color-mix(in oklch, var(--accent) 85%, white); color: var(--bg); transform: translateY(-2px); }
+    .btn-secondary { border-color: var(--border); }
+    .btn-secondary:hover { border-color: var(--fg); background: var(--fg-soft); color: var(--fg); }
+
+    .hero { padding: 0 var(--gutter) 88px; border-bottom: 1px dashed var(--border); }
+    .hero-stage { position: relative; max-width: calc(var(--container) - var(--gutter) * 2); height: min(61vw, 650px); min-height: 420px; margin-inline: auto; overflow: hidden; border-inline: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface); }
+    .compare-layer { position: absolute; inset: 0; overflow: hidden; }
+    .compare-after { clip-path: polygon(var(--split, 54%) 0, 100% 0, 100% 100%, var(--split, 54%) 100%); background: var(--bg); }
+    .hero-canvas { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+    .hero-ascii { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; margin: 0; overflow: hidden; color: var(--fg); font-size: 9px; line-height: .86; white-space: pre; text-align: center; text-shadow: 0 0 7px color-mix(in oklch, var(--fg) 38%, transparent); }
+    .compare-tag { position: absolute; top: 22px; z-index: 5; padding: 7px 10px; border: 1px solid var(--border); background: color-mix(in oklch, var(--bg) 88%, transparent); color: var(--muted); font-size: 11px; }
+    .compare-tag.before { left: 22px; }
+    .compare-tag.after { right: 22px; color: var(--fg); }
+    .compare-line { position: absolute; z-index: 8; top: 0; bottom: 0; left: var(--split, 54%); width: 1px; background: var(--fg); pointer-events: none; }
+    .compare-grip { position: absolute; z-index: 9; top: 50%; left: var(--split, 54%); width: 54px; height: 54px; display: grid; place-items: center; transform: translate(-50%, -50%); border: 1px solid var(--fg); border-radius: 50%; background: var(--bg); color: var(--fg); user-select: none; touch-action: none; cursor: ew-resize; box-shadow: 0 0 28px color-mix(in oklch, var(--fg) 26%, transparent); }
+    .hero-copy { max-width: var(--container); margin-inline: auto; padding: 54px var(--gutter) 0; }
+    .hero-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 40px; align-items: end; }
+    .hero-word::before { content: "{"; color: var(--muted); }
+    .hero-word::after { content: "}"; color: var(--muted); }
+    .hero-sub { max-width: 76ch; margin: 26px 0 0; color: var(--muted); font-size: 15px; }
+
+    .section-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .52fr); gap: 60px; align-items: end; margin-bottom: 54px; }
+    .section-head .lead { margin: 0 0 5px; }
+    .tool-shell { padding: 34px; border: 1px solid var(--border); background: var(--surface); }
+    .tool-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+    .tool-tab { min-height: 44px; border: 1px solid var(--border); padding: 9px 16px; color: var(--muted); background: transparent; }
+    .tool-tab[aria-selected="true"] { border-color: var(--fg); color: var(--fg); background: var(--fg-soft); }
+    .tool-tab[disabled] { cursor: not-allowed; opacity: .5; }
+    .workspace { display: grid; grid-template-columns: minmax(280px, .62fr) minmax(0, 1.38fr); min-height: 520px; border-top: 1px solid var(--border); }
+    .control-panel { padding: 24px 24px 0 0; border-right: 1px solid var(--border); }
+    .panel-head, .terminal-head { min-height: 40px; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+    .meta { color: var(--muted); font-size: 11px; }
+    .dropzone { min-height: 178px; display: grid; place-items: center; padding: 24px 18px; border: 1px dashed var(--fg); background: var(--fg-soft); text-align: center; transition: background .16s ease; }
+    .dropzone.is-dragging { background: color-mix(in oklch, var(--fg) 14%, transparent); }
+    .drop-mark { margin-bottom: 8px; font-size: 28px; }
+    .dropzone p { margin: 0; }
+    .dropzone small { display: block; margin-top: 6px; color: var(--muted); }
+    #file-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+    .upload-action { margin-top: 15px; }
+    .file-name { min-height: 18px; margin: 10px 0 0; overflow-wrap: anywhere; color: var(--muted); font-size: 11px; }
+    .fields { display: grid; gap: 16px; margin-top: 22px; }
+    .field { display: grid; gap: 6px; }
+    .field-row { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 12px; }
+    input[type="range"] { width: 100%; min-height: 30px; accent-color: var(--fg); }
+    select { width: 100%; min-height: 44px; border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; background: var(--bg); color: var(--fg); }
+    .toggle-row { min-height: 44px; display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 12px; }
+    .toggle-row input { width: 20px; height: 20px; accent-color: var(--fg); }
+    .terminal { min-width: 0; display: flex; flex-direction: column; padding: 24px 0 0 24px; }
+    .terminal-actions { display: flex; gap: 8px; }
+    .ascii-wrap { flex: 1; min-height: 392px; overflow: auto; border-block: 1px solid var(--border); background: var(--bg); }
+    #ascii-output { min-width: max-content; margin: 0; padding: 20px; color: var(--fg); font-size: 8px; line-height: .9; white-space: pre; text-shadow: 0 0 5px color-mix(in oklch, var(--fg) 28%, transparent); }
+    .terminal-status { min-height: 36px; display: flex; align-items: end; justify-content: space-between; gap: 16px; padding-top: 10px; color: var(--muted); font-size: 11px; }
+    .terminal-status[data-state="error"] { color: var(--accent); }
+    .terminal-status span:first-child::before { content: "> "; color: var(--fg); }
+
+    .bridge { display: grid; grid-template-columns: 1.15fr .85fr; min-height: 460px; padding: 0; }
+    .bridge-art { display: grid; place-items: center; overflow: hidden; border-right: 1px solid var(--border); background: var(--surface); }
+    .bridge-art pre { margin: 0; color: var(--fg); font-size: clamp(8px, 1.25vw, 18px); line-height: 1; white-space: pre; transform: rotate(-2deg); text-shadow: 0 0 12px color-mix(in oklch, var(--fg) 38%, transparent); }
+    .bridge-copy { display: flex; flex-direction: column; justify-content: center; padding: clamp(36px, 6vw, 88px); }
+    .bridge-copy .lead { margin: 24px 0 30px; }
+    .text-link { align-self: flex-start; min-height: 44px; display: inline-flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--fg); color: var(--fg); }
+    .text-link::after { content: "→"; transition: transform .16s ease; }
+    .text-link:hover::after { transform: translateX(5px); }
+
+    .cases-shell { overflow: hidden; }
+    .cases-head { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 48px; }
+    .case-track { width: max-content; display: flex; gap: 16px; animation: ticker 42s linear infinite; }
+    .case-track:hover { animation-play-state: paused; }
+    .motion-toggle { min-height: 40px; border: 1px solid var(--border); padding: 8px 12px; color: var(--muted); background: transparent; font-size: 11px; }
+    .motion-toggle:hover { border-color: var(--fg); color: var(--fg); }
+    .motion-toggle:active { transform: translateY(1px); }
+    .motion-toggle[disabled] { cursor: not-allowed; opacity: .65; }
+    .motion-paused .case-track, .motion-paused .final-rain span { animation-play-state: paused; }
+    .case-card { width: min(360px, 78vw); border: 1px solid var(--border); background: var(--surface); }
+    .case-bar { padding: 9px 12px; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 10px; }
+    .case-visual { height: 220px; display: grid; place-items: center; overflow: hidden; background: var(--bg); }
+    .case-visual pre { margin: 0; color: var(--fg); font-size: 11px; line-height: .95; white-space: pre; text-shadow: 0 0 5px color-mix(in oklch, var(--fg) 30%, transparent); }
+    .case-body { padding: 22px; }
+    .case-body p { margin: 8px 0 0; color: var(--muted); font-size: 13px; }
+    @keyframes ticker { to { transform: translateX(calc(-50% - 8px)); } }
+
+    .learn-grid { display: grid; grid-template-columns: .75fr 1.25fr; gap: 78px; }
+    .learn-list { border-top: 1px solid var(--border); }
+    .learn-row { display: grid; grid-template-columns: 92px 1fr auto; gap: 20px; align-items: baseline; padding: 22px 0; border-bottom: 1px solid var(--border); }
+    .learn-row .date, .learn-row .tag { color: var(--muted); font-size: 11px; }
+    .learn-row h3 { font-size: 18px; }
+    .learn-row p { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
+    .learn-row:hover h3 { color: var(--accent); }
+    .faq { margin-top: 44px; border-top: 1px solid var(--border); }
+    details { border-bottom: 1px solid var(--border); }
+    summary { min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 20px; cursor: pointer; }
+    summary::after { content: "+"; color: var(--muted); }
+    details[open] summary::after { content: "−"; }
+    details p { max-width: 74ch; margin: 0 0 24px; color: var(--muted); font-size: 14px; }
+
+    .final-panel { position: relative; min-height: 520px; display: grid; place-items: center; overflow: hidden; border: 1px solid var(--border); background: var(--surface); text-align: center; }
+    .final-rain { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(9, 1fr); overflow: hidden; opacity: .2; }
+    .final-rain span { writing-mode: vertical-rl; color: var(--fg); font-size: 12px; line-height: 2.2; animation: rain 10s linear infinite; }
+    .final-rain span:nth-child(2n) { animation-duration: 14s; transform: translateY(-28%); }
+    .final-rain span:nth-child(3n) { animation-duration: 18s; transform: translateY(-45%); }
+    @keyframes rain { to { transform: translateY(48%); } }
+    .final-content { position: relative; z-index: 2; max-width: 700px; padding: 50px 28px; }
+    .final-content .lead { margin: 20px auto 30px; }
+    .pagefoot { padding-block: 36px; color: var(--muted); font-size: 11px; }
+    .foot-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 18px; }
+    .pagefoot a:hover { color: var(--fg); }
+
+    @media (max-width: 920px) {
+      nav { display: none; }
+      .open-link { margin-left: auto; }
+      .hero { padding-inline: 0; }
+      .hero-stage { height: 56vw; min-height: 340px; border-inline: 0; }
+      .hero-row, .section-head, .workspace, .bridge, .learn-grid { grid-template-columns: 1fr; }
+      .hero-row { align-items: start; }
+      .section-head { gap: 22px; }
+      .control-panel { padding: 22px 0; border-right: 0; border-bottom: 1px solid var(--border); }
+      .terminal { padding: 22px 0 0; }
+      .bridge-art { min-height: 360px; border-right: 0; border-bottom: 1px solid var(--border); }
+      .learn-grid { gap: 44px; }
+    }
+    @media (max-width: 600px) {
+      h1 { font-size: 43px; }
+      .eyebrow, .meta, .file-name, .field-row, .terminal-status, .case-bar, .motion-toggle { font-size: 14px; }
+      .hero-stage { min-height: 300px; }
+      .hero-ascii { font-size: 5px; }
+      .hero-copy { padding-top: 34px; }
+      .tool-shell { padding: 18px; }
+      .terminal-head { align-items: flex-start; flex-direction: column; }
+      .terminal-actions { width: 100%; }
+      .terminal-actions .btn { flex: 1; padding-inline: 10px; }
+      .ascii-wrap { min-height: 320px; }
+      #ascii-output { font-size: 6px; }
+      .learn-row { grid-template-columns: 1fr auto; }
+      .learn-row .date { grid-column: 1 / -1; }
+      .cases-head { align-items: flex-start; flex-direction: column; }
+      .final-panel { min-height: 440px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="rails" aria-hidden="true"></div>
+  <header class="topnav" data-od-id="topnav">
+    <div class="container topnav-inner">
+      <a class="logo" href="index.html" aria-label="asciiimage.com 首页">asciiimage.com</a>
+      <nav aria-label="主导航"><a href="#tool" aria-current="page">图片转换</a><a href="line-art.html">单行字符画</a><a href="#usecases">使用场景</a><a href="#faq">常见问题</a></nav>
+      <a class="open-link" href="#tool">打开工具</a>
+    </div>
+  </header>
+
+  <main id="content">
+    <section class="hero" id="top" data-od-id="hero-comparison">
+      <div class="hero-stage" id="hero-compare" style="--split:54%;">
+        <div class="compare-layer"><canvas class="hero-canvas" id="portrait-before" aria-label="转换前的像素山景"></canvas></div>
+        <div class="compare-layer compare-after"><pre class="hero-ascii" id="portrait-after" aria-label="转换后的 ASCII 山景"></pre></div>
+        <span class="compare-tag before">BEFORE / 原图</span><span class="compare-tag after">AFTER / ASCII</span>
+        <div class="compare-line"></div><div class="compare-grip" id="compare-grip" role="slider" tabindex="0" aria-label="拖动比较转换前后" aria-valuemin="0" aria-valuemax="100" aria-valuenow="54">‹ ›</div>
+      </div>
+      <div class="hero-copy">
+        <p class="eyebrow">Image to ASCII</p>
+        <div class="hero-row"><h1 data-od-id="hero-heading">把每一张图片<br />变成 ASCII <span class="hero-word" id="hero-word">艺术</span></h1><a class="btn btn-primary" href="#tool" data-od-id="hero-cta">打开转换器</a></div>
+        <p class="hero-sub">上传照片，在浏览器本地转换为字符画、文本图案或方块像素。无需注册，图片不会离开你的设备。</p>
+      </div>
+    </section>
+
+    <section class="section" id="tool" data-od-id="converter-workspace">
+      <div class="container">
+        <div class="section-head"><div><p class="eyebrow">Tool / 01</p><h2>图片转 ASCII，直接在这里完成。</h2></div><p class="lead">选择图片、调整细节与字符集，然后复制纯文本或下载结果。</p></div>
+        <div class="tool-shell">
+          <div class="tool-tabs" role="tablist" aria-label="图片来源"><button class="tool-tab" type="button" role="tab" aria-selected="true">上传图片</button><button class="tool-tab" type="button" role="tab" aria-selected="false" disabled>粘贴图片 · 即将支持</button></div>
+          <div class="workspace">
+            <aside class="control-panel" aria-label="转换参数">
+              <div class="panel-head"><h3>输入</h3><span class="meta">SOURCE</span></div>
+              <div class="dropzone" id="dropzone" data-od-id="image-upload"><div><div class="drop-mark" aria-hidden="true">[ + ]</div><p>拖放图片到这里</p><small>JPG、PNG、WebP · 最大 10MB</small><label class="btn btn-primary upload-action" for="file-input" tabindex="0">选择图片</label><input id="file-input" type="file" accept="image/png,image/jpeg,image/webp" /><p class="file-name" id="file-name">当前使用内置山景示例</p></div></div>
+              <div class="fields">
+                <div class="field"><div class="field-row"><label for="width-range">输出细节</label><output id="width-value">100 列</output></div><input id="width-range" type="range" min="40" max="180" value="100" step="5" /></div>
+                <div class="field"><div class="field-row"><label for="charset">字符风格</label><span>从暗到亮</span></div><select id="charset"><option value="@%#*+=-:. ">经典字符</option><option value="MWNXK0Okxdolc:,. ">细腻渐变</option><option value="█▓▒░ ">方块像素</option><option value="@. ">极简点阵</option></select></div>
+                <label class="toggle-row" for="invert"><span>反转明暗</span><input id="invert" type="checkbox" /></label>
+              </div>
+            </aside>
+            <div class="terminal">
+              <div class="terminal-head"><div><h3>输出预览</h3><span class="meta">ASCII / TEXT</span></div><div class="terminal-actions"><button class="btn btn-secondary" id="copy-output" data-od-id="copy-output" type="button">复制文本</button><button class="btn btn-secondary" id="download-output" data-od-id="download-output" type="button">下载 .txt</button></div></div>
+              <div class="ascii-wrap" aria-live="polite"><pre id="ascii-output" data-od-id="ascii-output" aria-label="ASCII 字符画预览"></pre></div>
+              <div class="terminal-status"><span id="status" role="status">示例已就绪</span><span id="dimensions">100 COLS</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section bridge" data-od-id="ai-bridge">
+      <div class="bridge-art" aria-hidden="true"><pre>             .-"""-.
+           .'  _ _  '.
+          /   (o o)   \
+         |      ^      |
+         |   \_____/   |
+          \           /
+           '._     _.'
+              '---'
+        ASCII / ONE LINE
+       =^..^=   (^‿^)   &lt;3</pre></div>
+      <div class="bridge-copy"><p class="eyebrow">No image?</p><h2>没有照片，也可以从一个字符开始。</h2><p class="lead">浏览动物、人物、表情和物品图案，生成适合昵称、状态和聊天消息的单行字符画。</p><a class="text-link" href="line-art.html">进入单行字符画</a></div>
+    </section>
+
+    <section class="section" id="usecases" data-od-id="use-cases">
+      <div class="container cases-shell"><div class="cases-head"><div><p class="eyebrow">Use cases</p><h2>字符画，最后去了哪里？</h2></div><button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false">暂停动效</button></div><div class="case-track" id="case-track"></div></div>
+    </section>
+
+    <section class="section" data-od-id="learn-ascii">
+      <div class="container learn-grid">
+        <div><p class="eyebrow">Learn ASCII</p><h2>理解字符，才能控制结果。</h2><p class="lead" style="margin-top:24px;">从字符密度到终端字宽，几个简单原则就能让输出更清晰。</p></div>
+        <div class="learn-list">
+          <article class="learn-row"><span class="date">GUIDE / 01</span><div><h3>为什么高对比图片效果更好？</h3><p>字符映射依赖亮度差异，清晰轮廓会转化为更稳定的文本结构。</p></div><span class="tag">基础</span></article>
+          <article class="learn-row"><span class="date">GUIDE / 02</span><div><h3>如何选择输出列宽？</h3><p>头像从 60–100 列开始，复杂场景可增加到 120 列以上。</p></div><span class="tag">参数</span></article>
+          <article class="learn-row"><span class="date">GUIDE / 03</span><div><h3>字符集如何影响画面气质？</h3><p>密集字符保留细节，方块字符更像像素图，极简字符强调轮廓。</p></div><span class="tag">风格</span></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq" data-od-id="faq">
+      <div class="container">
+        <div class="section-head"><div><p class="eyebrow">FAQ</p><h2>转换之前，先回答几个问题。</h2></div><p class="lead">工具在本地运行，不上传图片，也不要求注册。</p></div>
+        <div class="faq">
+          <details><summary>什么图片最适合转换？</summary><p>主体清晰、轮廓明确、明暗对比强的图片效果最好。人像建议先裁剪到头肩范围。</p></details>
+          <details><summary>为什么预览看起来被拉长了？</summary><p>终端字符通常比正方形更高，工具已按约 2:1 的字符比例压缩高度；不同字体仍可能略有差异。</p></details>
+          <details><summary>图片会被上传吗？</summary><p>不会。读取像素、转换和文本导出都在当前浏览器内完成。</p></details>
+          <details><summary>可以用于社交媒体吗？</summary><p>可以。建议先使用 60–100 列宽生成，再根据目标平台的等宽字体显示效果微调。</p></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-od-id="final-cta">
+      <div class="container"><div class="final-panel"><div class="final-rain" aria-hidden="true"><span>@#%*+=-:.@#%*+=-:.</span><span>0101010011010101</span><span>MWNXK0Okxdolc</span><span>█▓▒░█▓▒░█▓▒░</span><span>asciiimage</span><span>@#%*+=-:.@#%*+=-:.</span><span>0101010011010101</span><span>MWNXK0Okxdolc</span><span>█▓▒░█▓▒░█▓▒░</span></div><div class="final-content"><p class="eyebrow">Ready?</p><h2>下一张图片，换一种语言。</h2><p class="lead">选择照片，几秒内得到可以复制和下载的字符画。</p><a class="btn btn-primary" href="#tool">开始转换图片</a></div></div></div>
+    </section>
+  </main>
+
+  <footer class="pagefoot" data-od-id="footer"><div class="container foot-inner"><span>© 2026 asciiimage.com</span><span><a href="line-art.html">单行字符画</a> · 本地处理 · 免费使用</span></div></footer>
+  <canvas id="work-canvas" hidden></canvas>
+
+  <script id="ascii-core">
+    function mapBrightnessToChar(brightness, charset) {
+      const index = Math.round((brightness / 255) * (charset.length - 1));
+      return charset[Math.max(0, Math.min(charset.length - 1, index))];
+    }
+    function imageDataToAscii(pixels, width, height, charset) {
+      const rows = [];
+      for (let y = 0; y < height; y += 1) {
+        let row = '';
+        for (let x = 0; x < width; x += 1) {
+          const offset = (y * width + x) * 4;
+          const brightness = pixels[offset] * 0.2126 + pixels[offset + 1] * 0.7152 + pixels[offset + 2] * 0.0722;
+          row += mapBrightnessToChar(brightness, charset);
+        }
+        rows.push(row);
+      }
+      return rows.join('\n');
+    }
+    window.AsciiCore = { mapBrightnessToChar, imageDataToAscii };
+  </script>
+  <script>
+    (() => {
+      const rootStyles = getComputedStyle(document.documentElement);
+      const colors = ['--bg', '--surface', '--fg', '--muted'].map(name => rootStyles.getPropertyValue(name).trim());
+
+      function drawLandscape(canvas) {
+        const width = 1200, height = 560;
+        canvas.width = width; canvas.height = height;
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        ctx.fillStyle = colors[0]; ctx.fillRect(0, 0, width, height);
+        ctx.fillStyle = colors[3]; ctx.beginPath(); ctx.arc(790, 162, 92, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = colors[1]; ctx.beginPath(); ctx.moveTo(0, 450); ctx.lineTo(260, 210); ctx.lineTo(430, 370); ctx.lineTo(670, 130); ctx.lineTo(910, 390); ctx.lineTo(1200, 230); ctx.lineTo(1200, 560); ctx.lineTo(0, 560); ctx.fill();
+        ctx.fillStyle = colors[3]; ctx.beginPath(); ctx.moveTo(120, 510); ctx.lineTo(360, 290); ctx.lineTo(520, 470); ctx.lineTo(720, 240); ctx.lineTo(980, 500); ctx.lineTo(1200, 360); ctx.lineTo(1200, 560); ctx.lineTo(0, 560); ctx.fill();
+        ctx.fillStyle = colors[0]; ctx.beginPath(); ctx.moveTo(0, 530); ctx.quadraticCurveTo(340, 470, 620, 535); ctx.quadraticCurveTo(900, 475, 1200, 530); ctx.lineTo(1200, 560); ctx.lineTo(0, 560); ctx.fill();
+      }
+
+      const heroCanvas = document.querySelector('#portrait-before');
+      drawLandscape(heroCanvas);
+      const sampler = document.createElement('canvas');
+      sampler.width = 126; sampler.height = 54;
+      const sampleContext = sampler.getContext('2d', { willReadFrequently: true });
+      sampleContext.drawImage(heroCanvas, 0, 0, 126, 54);
+      document.querySelector('#portrait-after').textContent = window.AsciiCore.imageDataToAscii(sampleContext.getImageData(0, 0, 126, 54).data, 126, 54, '@%#*+=-:. ');
+
+      const compare = document.querySelector('#hero-compare');
+      const grip = document.querySelector('#compare-grip');
+      function setSplit(clientX) {
+        const box = compare.getBoundingClientRect();
+        const percent = Math.max(6, Math.min(94, ((clientX - box.left) / box.width) * 100));
+        compare.style.setProperty('--split', percent + '%');
+        grip.setAttribute('aria-valuenow', String(Math.round(percent)));
+      }
+      grip.addEventListener('pointerdown', event => { grip.setPointerCapture(event.pointerId); setSplit(event.clientX); });
+      grip.addEventListener('pointermove', event => { if (grip.hasPointerCapture(event.pointerId)) setSplit(event.clientX); });
+      grip.addEventListener('keydown', event => {
+        if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+        event.preventDefault();
+        const current = Number(grip.getAttribute('aria-valuenow')), box = compare.getBoundingClientRect();
+        setSplit(box.left + box.width * (current + (event.key === 'ArrowRight' ? 3 : -3)) / 100);
+      });
+
+      const words = ['艺术', '字符', '方块', '点阵'];
+      const heroWord = document.querySelector('#hero-word');
+      let wordIndex = 0;
+      const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+      if (!reducedMotion.matches) setInterval(() => { wordIndex = (wordIndex + 1) % words.length; heroWord.textContent = words[wordIndex]; }, 1900);
+      const motionToggle = document.querySelector('#motion-toggle');
+      function setMotionPaused(paused) {
+        document.body.classList.toggle('motion-paused', paused);
+        motionToggle.setAttribute('aria-pressed', String(paused));
+        motionToggle.textContent = paused ? '继续动效' : '暂停动效';
+      }
+      setMotionPaused(reducedMotion.matches);
+      if (reducedMotion.matches) {
+        motionToggle.disabled = true;
+        motionToggle.textContent = '系统已关闭动效';
+      } else {
+        motionToggle.addEventListener('click', () => setMotionPaused(!document.body.classList.contains('motion-paused')));
+      }
+
+      const caseData = [
+        ['social.ascii', '头像与社交内容', '把人像转成纯文本头像，或制作能在信息流里停住视线的字符画。', ['  .-""-.', ' / .--. \\', '/ /    \\ \\', '| |    | |', '\\ \\____/ /', " '.___.'", ' /|   |\\', '  |___|'].join('\n')],
+        ['header.txt', '代码与终端', '用于仓库 README、代码注释、CLI 欢迎页和构建完成提示。', ['╔══════════════╗', '║  BUILD  OK   ║', '║  v1.0.0      ║', '╚══════════════╝', '    \\  ^__^', '     \\ (oo)\\_______'].join('\n')],
+        ['poster.ascii', '海报与封面', '用高对比字符结构做演出海报、专辑封面或活动视觉。', ['      /\\', '     /  \\', '    / /\\ \\', '   / ____ \\', '  /_/    \\_\\', '', '  NIGHT / 26'].join('\n')],
+        ['message.txt', '聊天与签名', '复制成纯文本，不依赖图片加载，跨平台分享更轻量。', ['┌─────────────┐', '│  HELLO      │', '│      (^_^)/ │', '└─────────────┘', '', '<3  <3  <3'].join('\n')]
+      ];
+      const caseTrack = document.querySelector('#case-track');
+      [...caseData, ...caseData].forEach((item, index) => {
+        const article = document.createElement('article'); article.className = 'case-card';
+        if (index >= caseData.length) article.setAttribute('aria-hidden', 'true'); else article.setAttribute('data-od-id', 'use-case-' + (index + 1));
+        const bar = document.createElement('div'); bar.className = 'case-bar'; bar.textContent = item[0];
+        const visual = document.createElement('div'); visual.className = 'case-visual';
+        const pre = document.createElement('pre'); pre.textContent = item[3]; visual.append(pre);
+        const body = document.createElement('div'); body.className = 'case-body';
+        const title = document.createElement('h3'); title.textContent = item[1];
+        const copy = document.createElement('p'); copy.textContent = item[2];
+        body.append(title, copy); article.append(bar, visual, body); caseTrack.append(article);
+      });
+
+      const fileInput = document.querySelector('#file-input'), dropzone = document.querySelector('#dropzone');
+      const workCanvas = document.querySelector('#work-canvas'), output = document.querySelector('#ascii-output');
+      const widthRange = document.querySelector('#width-range'), widthValue = document.querySelector('#width-value');
+      const charset = document.querySelector('#charset'), invert = document.querySelector('#invert');
+      const status = document.querySelector('#status'), dimensions = document.querySelector('#dimensions'), fileName = document.querySelector('#file-name');
+      let sourceImage = heroCanvas;
+
+      function setStatus(message, state) {
+        status.textContent = message;
+        status.parentElement.dataset.state = state || 'ready';
+      }
+
+      function render() {
+        const sourceWidth = sourceImage.naturalWidth || sourceImage.width, sourceHeight = sourceImage.naturalHeight || sourceImage.height;
+        const width = Number(widthRange.value), height = Math.max(1, Math.round((sourceHeight / sourceWidth) * width * 0.5));
+        const context = workCanvas.getContext('2d', { willReadFrequently: true });
+        workCanvas.width = width; workCanvas.height = height; context.drawImage(sourceImage, 0, 0, width, height);
+        const chars = invert.checked ? [...charset.value].reverse().join('') : charset.value;
+        output.textContent = window.AsciiCore.imageDataToAscii(context.getImageData(0, 0, width, height).data, width, height, chars);
+        setStatus('转换完成 · 可复制或下载'); dimensions.textContent = width + ' COLS × ' + height + ' ROWS';
+      }
+      function loadFile(file) {
+        if (!file) return;
+        if (!file.type.startsWith('image/')) { setStatus('文件类型不支持，请选择 JPG、PNG 或 WebP', 'error'); return; }
+        if (file.size > 10 * 1024 * 1024) { setStatus('文件超过 10MB，请压缩后重试', 'error'); return; }
+        setStatus('正在读取图片…', 'loading');
+        fileName.textContent = '正在读取 ' + file.name;
+        dropzone.setAttribute('aria-busy', 'true');
+        fileInput.disabled = true;
+        const reader = new FileReader();
+        const finishLoading = () => { dropzone.removeAttribute('aria-busy'); fileInput.disabled = false; };
+        reader.onload = event => { const image = new Image(); image.onload = () => { sourceImage = image; fileName.textContent = file.name; finishLoading(); render(); }; image.onerror = () => { finishLoading(); setStatus('图片读取失败，请更换文件后重试', 'error'); }; image.src = event.target.result; };
+        reader.onerror = () => { finishLoading(); setStatus('文件读取失败，请重新选择', 'error'); };
+        reader.readAsDataURL(file);
+      }
+      fileInput.addEventListener('change', () => loadFile(fileInput.files[0]));
+      ['dragenter', 'dragover'].forEach(type => dropzone.addEventListener(type, event => { event.preventDefault(); dropzone.classList.add('is-dragging'); }));
+      ['dragleave', 'drop'].forEach(type => dropzone.addEventListener(type, event => { event.preventDefault(); dropzone.classList.remove('is-dragging'); }));
+      dropzone.addEventListener('drop', event => loadFile(event.dataTransfer.files[0]));
+      widthRange.addEventListener('input', () => { widthValue.textContent = widthRange.value + ' 列'; render(); });
+      charset.addEventListener('change', render); invert.addEventListener('change', render);
+      document.querySelector('#copy-output').addEventListener('click', async event => {
+        try { await navigator.clipboard.writeText(output.textContent); event.currentTarget.textContent = '已复制'; setStatus('字符画已复制到剪贴板'); } catch { setStatus('复制失败，请手动选择文本', 'error'); }
+        setTimeout(() => { event.currentTarget.textContent = '复制文本'; }, 1600);
+      });
+      document.querySelector('#download-output').addEventListener('click', () => {
+        const blob = new Blob([output.textContent], { type: 'text/plain;charset=utf-8' }), link = document.createElement('a');
+        link.href = URL.createObjectURL(blob); link.download = 'ascii-art.txt'; link.click(); URL.revokeObjectURL(link.href); setStatus('文本文件已下载');
+      });
+      render();
+    })();
+  </script>
+</body>
+</html>

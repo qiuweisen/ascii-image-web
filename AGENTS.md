@@ -114,3 +114,23 @@ Enforced by Biome (`biome.json`):
 
 ### Cloudflare Workers Constraint
 Avoid Node.js-specific APIs — this runs on Cloudflare Workers runtime, not Node.js.
+
+## Open Design System
+
+The visual system for the image-to-ASCII product is documented in
+[`DESIGN.md`](DESIGN.md). Read it before creating or materially changing any
+user-facing page or component.
+
+- Treat `DESIGN.md` as the source of truth for semantic color, typography,
+  spacing, radius, layout, interaction, and accessibility tokens.
+- Prefer existing tokens and component patterns over new one-off CSS values.
+- Preserve the Terminal ASCII direction: dark tinted surfaces, luminous
+  character output, thin cyan structure lines, monospace typography, restrained
+  borders, and purposeful motion.
+- Keep the converter/output workspace as the primary visual and interaction
+  surface. Do not replace it with decorative card grids or marketing-only hero
+  content.
+- When adding a new component, document any intentional token exception in the
+  component code or a short note in `DESIGN.md`.
+- Verify responsive behavior, keyboard focus, reduced motion, empty/loading/error
+  states, and text overflow before considering a UI change complete.
