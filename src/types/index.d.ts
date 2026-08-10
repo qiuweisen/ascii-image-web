@@ -18,6 +18,9 @@ export interface WebsiteConfig {
 
 /** UI configuration */
 export interface UiConfig {
+  locale?: {
+    enableSwitch?: boolean;                     // Whether to show locale controls
+  };
   mode?: {
     defaultMode?: 'light' | 'dark' | 'system';  // The default mode of the website
     enableSwitch?: boolean;                     // Whether to enable the mode switch

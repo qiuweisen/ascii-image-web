@@ -4,13 +4,13 @@ import { seo } from '@/lib/seo';
 import { getCanonicalUrl } from '@/lib/urls';
 import { getLocale, localeConfig } from '@/lib/locale';
 import { createFileRoute } from '@tanstack/react-router';
+import { m } from '@/locale/paraglide/messages';
 
 export const Route = createFileRoute('/')({
   head: () => {
     const name = websiteConfig.metadata?.name ?? '';
-    const title = 'Image to ASCII - Convert Images to ASCII Art Free';
-    const description =
-      'Turn images into copyable ASCII art in your browser. Adjust character density, contrast, and style locally with no upload or signup.';
+    const title = m.site_title();
+    const description = m.site_description();
     const url = getCanonicalUrl('/');
     const inLanguage = localeConfig[getLocale()].hreflang;
     const webSiteJsonLd = {

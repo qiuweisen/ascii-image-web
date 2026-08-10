@@ -32,59 +32,57 @@ const priceIds = isPaymentEnabled
  */
 export const websiteConfig: WebsiteConfig = {
   ui: {
+    locale: {
+      enableSwitch: false,
+    },
     mode: {
       defaultMode: 'dark',
       enableSwitch: true,
     },
   },
   metadata: {
-    name: 'ASCII Image',
-    title: 'Image to ASCII - Convert Images to ASCII Art Free',
-    description:
-      'Turn images into copyable ASCII art in your browser. Adjust character density, contrast, and style locally with no upload or signup.',
-    images: {
-      ogImage: '/og.png',
-      logoLight: '/logo.png',
-      logoDark: '/logo-dark.png',
+    get name() {
+      return m.site_name();
+    },
+    get title() {
+      return m.site_title();
+    },
+    get description() {
+      return m.site_description();
     },
   },
   social: {
     github: 'https://github.com/qiuweisen/ascii-image-web',
-    discord: 'https://mksaas.link/discord',
-    twitter: 'https://x.com/TanStarter',
-    youtube: 'https://www.youtube.com/@TanStarter',
   },
   auth: {
-    enable: true,
-    enableGoogleLogin: true,
-    enableCredentialLogin: true,
-    enableDeleteAccount: true,
+    enable: false,
+    enableGoogleLogin: false,
+    enableCredentialLogin: false,
+    enableDeleteAccount: false,
   },
   blog: {
-    enable: true,
+    enable: false,
     paginationSize: 6,
   },
   mail: {
-    enable: true,
+    enable: false,
     provider: 'cloudflare',
-    fromEmail: 'TanStarter <support@tanstarter.dev>',
-    supportEmail: 'TanStarter <support@tanstarter.dev>',
   },
   newsletter: {
-    enable: true,
+    enable: false,
     provider: 'resend',
     autoSubscribeAfterSignUp: true,
   },
   notification: {
-    enable: import.meta.env.MODE !== 'e2e',
+    enable: false,
     provider: 'discord',
   },
   cache: {
-    enable: true,
+    enable: false,
     provider: 'kv',
   },
   storage: {
-    enable: true,
+    enable: false,
     provider: 'r2',
     maxFileSize: DEFAULT_MAX_FILE_SIZE,
     allowedTypes: DEFAULT_ALLOWED_TYPES,

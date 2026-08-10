@@ -77,7 +77,7 @@ export function DashboardHeader({
 
         <div className="ml-auto flex shrink-0 items-center gap-3 pl-4">
           {actions}
-          <LocaleSwitcher />
+          {websiteConfig.ui?.locale?.enableSwitch && <LocaleSwitcher />}
           {showModeSwitch && <ModeSwitcher />}
         </div>
       </div>

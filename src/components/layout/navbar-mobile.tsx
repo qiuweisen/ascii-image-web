@@ -184,7 +184,9 @@ export function NavbarMobile({ className, ...props }: NavbarMobileProps) {
             </ul>
 
             <div className="mt-auto w-full border-t border-border/50 p-4 flex items-center justify-end gap-2">
-              <LocaleSwitcher onLocaleChange={() => setOpen(false)} />
+              {websiteConfig.ui?.locale?.enableSwitch && (
+                <LocaleSwitcher onLocaleChange={() => setOpen(false)} />
+              )}
               <ModeSwitcherHorizontal />
             </div>
           </div>

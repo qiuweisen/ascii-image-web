@@ -164,7 +164,7 @@ export function Navbar({ scroll = true }: NavbarProps) {
             </NavigationMenu>
 
             <div className="flex items-center gap-4 shrink-0">
-              <LocaleSwitcher />
+              {websiteConfig.ui?.locale?.enableSwitch && <LocaleSwitcher />}
               <ModeSwitcher />
               {websiteConfig.auth?.enable &&
                 (!mounted || isPending ? (

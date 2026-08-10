@@ -6,6 +6,7 @@ import {
 } from '@tabler/icons-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { m } from '@/locale/paraglide/messages';
 
 const RAMPS = {
   classic: ' .,:;irsXA253hMHGS#9B&@',
@@ -80,7 +81,7 @@ export function AsciiConverter() {
   const [contrast, setContrast] = useState(10);
   const [ramp, setRamp] = useState<Ramp>('classic');
   const [invert, setInvert] = useState(false);
-  const [status, setStatus] = useState('DEMO OUTPUT');
+  const [status, setStatus] = useState(() => m.ascii_status_demo());
   const inputRef = useRef<HTMLInputElement>(null);
   const update = useCallback(
     (canvas: HTMLCanvasElement | null) => {
@@ -93,6 +94,35 @@ export function AsciiConverter() {
   useEffect(() => {
     update(source ?? demoImage());
   }, [update]);
+  const loadFile = useCallback(
+    (file?: File) => {
+      if (
+        !file ||
+        !['image/jpeg', 'image/png', 'image/webp'].includes(file.type) ||
+        file.size > 10 * 1024 * 1024
+      ) {
+        setStatus(m.ascii_status_invalid_file());
+        return;
+      }
+      const image = new Image();
+      const imageUrl = URL.createObjectURL(file);
+      image.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
+        canvas.getContext('2d')?.drawImage(image, 0, 0);
+        URL.revokeObjectURL(imageUrl);
+        setStatus(m.ascii_status_image_complete());
+        update(canvas);
+      };
+      image.onerror = () => {
+        URL.revokeObjectURL(imageUrl);
+        setStatus(m.ascii_status_image_error());
+      };
+      image.src = imageUrl;
+    },
+    [update]
+  );
   useEffect(() => {
     const onPaste = (event: ClipboardEvent) => {
       const file = [...(event.clipboardData?.items ?? [])]
@@ -105,30 +135,15 @@ export function AsciiConverter() {
     };
     window.addEventListener('paste', onPaste);
     return () => window.removeEventListener('paste', onPaste);
-  });
-  const loadFile = (file?: File) => {
-    if (
-      !file ||
-      !file.type.startsWith('image/') ||
-      file.size > 10 * 1024 * 1024
-    ) {
-      setStatus('ERROR / USE AN IMAGE UNDER 10MB');
-      return;
-    }
-    const image = new Image();
-    image.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = image.naturalWidth;
-      canvas.height = image.naturalHeight;
-      canvas.getContext('2d')?.drawImage(image, 0, 0);
-      setStatus('LOCAL IMAGE / COMPLETE');
-      update(canvas);
-    };
-    image.src = URL.createObjectURL(file);
-  };
+  }, [loadFile]);
   const copy = async () => {
-    await navigator.clipboard?.writeText(output);
-    setStatus('COPIED TO CLIPBOARD');
+    try {
+      if (!navigator.clipboard) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(output);
+      setStatus(m.ascii_status_copied());
+    } catch {
+      setStatus(m.ascii_status_copy_error());
+    }
   };
   const download = () => {
     const blob = new Blob([output], { type: 'text/plain;charset=utf-8' });
@@ -138,13 +153,13 @@ export function AsciiConverter() {
     a.download = 'ascii-art.txt';
     a.click();
     URL.revokeObjectURL(url);
-    setStatus('TXT DOWNLOADED');
+    setStatus(m.ascii_status_downloaded());
   };
   return (
     <section className="ascii-workspace" aria-label="Image to ASCII converter">
       <div className="ascii-workspace-bar">
         <span>
-          <i className="ascii-pulse" /> CONVERTER / BROWSER LOCAL
+          <i className="ascii-pulse" /> {m.ascii_status_workspace()}
         </span>
         <span>{status}</span>
       </div>
@@ -161,8 +176,8 @@ export function AsciiConverter() {
             onClick={() => inputRef.current?.click()}
           >
             <IconUpload />
-            <strong>Drop an image here</strong>
-            <span>or browse / paste from clipboard</span>
+            <strong>{m.ascii_drop_title()}</strong>
+            <span>{m.ascii_drop_browse()}</span>
           </button>
           <input
             ref={inputRef}
@@ -173,7 +188,7 @@ export function AsciiConverter() {
           />
           <div className="ascii-control-group">
             <label htmlFor="width">
-              OUTPUT WIDTH <output>{width} COL</output>
+              {m.ascii_control_output_width()} <output>{width} COL</output>
             </label>
             <input
               id="width"
@@ -187,7 +202,7 @@ export function AsciiConverter() {
           </div>
           <div className="ascii-control-group">
             <label htmlFor="contrast">
-              CONTRAST{' '}
+              {m.ascii_control_contrast()}{' '}
               <output>
                 {contrast > 0 ? '+' : ''}
                 {contrast}
@@ -203,7 +218,7 @@ export function AsciiConverter() {
             />
           </div>
           <fieldset className="ascii-control-group">
-            <legend>CHARACTER RAMP</legend>
+            <legend>{m.ascii_control_character_ramp()}</legend>
             <div className="ascii-segmented">
               {(Object.keys(RAMPS) as Ramp[]).map((key) => (
                 <button
@@ -212,7 +227,11 @@ export function AsciiConverter() {
                   className={ramp === key ? 'is-active' : ''}
                   onClick={() => setRamp(key)}
                 >
-                  {key}
+                  {key === 'classic'
+                    ? m.ascii_ramp_classic()
+                    : key === 'dense'
+                      ? m.ascii_ramp_dense()
+                      : m.ascii_ramp_blocks()}
                 </button>
               ))}
             </div>
@@ -223,14 +242,14 @@ export function AsciiConverter() {
               checked={invert}
               onChange={(e) => setInvert(e.target.checked)}
             />{' '}
-            Invert mapping
+            {m.ascii_control_invert()}
           </label>
           <div className="ascii-actions">
             <Button onClick={copy} size="lg">
-              <IconClipboard /> Copy text
+              <IconClipboard /> {m.ascii_action_copy()}
             </Button>
             <Button onClick={download} variant="outline" size="lg">
-              <IconDownload /> Download .txt
+              <IconDownload /> {m.ascii_action_download()}
             </Button>
             <button
               type="button"
@@ -240,22 +259,19 @@ export function AsciiConverter() {
                 setContrast(10);
                 setRamp('classic');
                 setInvert(false);
-                setStatus('DEMO OUTPUT');
-                update(null);
+                setStatus(m.ascii_status_demo());
+                update(demoImage());
               }}
-              aria-label="Reset settings"
+              aria-label={m.ascii_action_reset()}
             >
               <IconRefresh />
             </button>
           </div>
-          <p className="ascii-privacy">
-            Your image never leaves this tab. Processing uses the Canvas API and
-            can work offline.
-          </p>
+          <p className="ascii-privacy">{m.ascii_privacy_note()}</p>
         </div>
         <div className="ascii-output-wrap">
           <div className="ascii-output-head">
-            <span>ASCII OUTPUT</span>
+            <span>{m.ascii_output_label()}</span>
             <span>{output.split('\n').length} ROWS</span>
           </div>
           <pre className="ascii-output" aria-live="polite">

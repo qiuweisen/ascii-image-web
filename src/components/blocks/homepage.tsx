@@ -1,19 +1,11 @@
 import { AsciiConverter } from '@/components/ascii/ascii-converter';
 import { Link } from '@tanstack/react-router';
+import { m } from '@/locale/paraglide/messages';
 
 const faqs = [
-  [
-    'Does my image leave my device?',
-    'No. The image is decoded and rendered in your browser. Nothing is uploaded or stored.',
-  ],
-  [
-    'Why does my output look stretched?',
-    'ASCII characters are taller than they are wide. Keep aspect-ratio compensation enabled for more natural proportions.',
-  ],
-  [
-    'What can I use ASCII art for?',
-    'Copy it into a terminal, README, Discord message, code comment, social bio, or poster concept.',
-  ],
+  [m.ascii_faq_privacy_question, m.ascii_faq_privacy_answer],
+  [m.ascii_faq_stretch_question, m.ascii_faq_stretch_answer],
+  [m.ascii_faq_use_question, m.ascii_faq_use_answer],
 ];
 
 export function HomePage() {
@@ -22,19 +14,16 @@ export function HomePage() {
       <section className="ascii-hero">
         <div className="ascii-container ascii-hero-grid">
           <div className="ascii-kicker">
-            <span className="ascii-pulse" /> LOCAL / NO UPLOAD / READY
+            <span className="ascii-pulse" /> {m.ascii_hero_kicker()}
           </div>
           <h1>
-            Image to <span>ASCII</span>
+            {m.ascii_hero_title_prefix()} <span>ASCII</span>
           </h1>
-          <p className="ascii-lede">
-            Turn a photo into luminous monospace art in your browser. Tune the
-            density, copy the result, and keep the original file on your device.
-          </p>
+          <p className="ascii-lede">{m.ascii_hero_text()}</p>
           <div className="ascii-hero-meta">
-            <span>⌘ no account</span>
-            <span>↯ instant preview</span>
-            <span>◎ works offline</span>
+            <span>⌘ {m.ascii_hero_meta_account()}</span>
+            <span>↯ {m.ascii_hero_meta_preview()}</span>
+            <span>◎ {m.ascii_hero_meta_offline()}</span>
           </div>
         </div>
       </section>
@@ -45,22 +34,13 @@ export function HomePage() {
         <section className="ascii-section" aria-labelledby="use-cases-title">
           <div className="ascii-section-heading">
             <span className="ascii-index">01</span>
-            <h2 id="use-cases-title">Made for places where images get lost</h2>
+            <h2 id="use-cases-title">{m.ascii_use_title()}</h2>
           </div>
           <div className="ascii-use-grid">
             {[
-              [
-                'README / TERMINAL',
-                'Keep a visual signature inside code, issues, and shell scripts.',
-              ],
-              [
-                'SOCIAL / DISCORD',
-                'Paste a compact portrait, reaction, or divider without attaching a file.',
-              ],
-              [
-                'POSTER / COVER',
-                'Push contrast and character density until a photo becomes a graphic texture.',
-              ],
+              [m.ascii_use_readme_title(), m.ascii_use_readme_body()],
+              [m.ascii_use_social_title(), m.ascii_use_social_body()],
+              [m.ascii_use_poster_title(), m.ascii_use_poster_body()],
             ].map(([title, body]) => (
               <article key={title} className="ascii-use-item">
                 <div className="ascii-use-mark">+_</div>
@@ -74,23 +54,23 @@ export function HomePage() {
         <section className="ascii-section" aria-labelledby="styles-title">
           <div className="ascii-section-heading">
             <span className="ascii-index">02</span>
-            <h2 id="styles-title">Choose a different signal</h2>
+            <h2 id="styles-title">{m.ascii_styles_title()}</h2>
           </div>
           <div className="ascii-style-links">
             <Link to="/line-art/" className="ascii-style-link">
-              <span>01 / LINE ART</span>
-              <strong>One-line pieces to copy</strong>
+              <span>{m.ascii_styles_line_label()}</span>
+              <strong>{m.ascii_styles_line_description()}</strong>
               <b>→</b>
             </Link>
             <div className="ascii-style-link is-muted">
-              <span>02 / BRAILLE</span>
-              <strong>High-detail dot mapping</strong>
-              <em>SOON</em>
+              <span>{m.ascii_styles_braille_label()}</span>
+              <strong>{m.ascii_styles_braille_description()}</strong>
+              <em>{m.ascii_styles_soon()}</em>
             </div>
             <div className="ascii-style-link is-muted">
-              <span>03 / COLOR</span>
-              <strong>Keep the source palette</strong>
-              <em>SOON</em>
+              <span>{m.ascii_styles_color_label()}</span>
+              <strong>{m.ascii_styles_color_description()}</strong>
+              <em>{m.ascii_styles_soon()}</em>
             </div>
           </div>
         </section>
@@ -101,15 +81,15 @@ export function HomePage() {
         >
           <div className="ascii-section-heading">
             <span className="ascii-index">03</span>
-            <h2 id="faq-title">Field notes</h2>
+            <h2 id="faq-title">{m.ascii_faq_title()}</h2>
           </div>
-          {faqs.map(([question, answer]) => (
-            <details key={question}>
+          {faqs.map(([getQuestion, getAnswer]) => (
+            <details key={getQuestion()}>
               <summary>
-                {question}
+                {getQuestion()}
                 <span>+</span>
               </summary>
-              <p>{answer}</p>
+              <p>{getAnswer()}</p>
             </details>
           ))}
         </section>
