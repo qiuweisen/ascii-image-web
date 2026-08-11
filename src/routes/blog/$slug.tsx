@@ -55,7 +55,7 @@ export const Route = createFileRoute('/blog/$slug')({
         logo: {
           '@type': 'ImageObject',
           url: getImageUrl(
-            websiteConfig.metadata?.images?.logoLight ?? '/logo.png'
+            websiteConfig.metadata?.images?.logoLight ?? '/logo-generated.webp'
           ),
         },
       },

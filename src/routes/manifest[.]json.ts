@@ -23,15 +23,14 @@ export const Route = createFileRoute('/manifest.json')({
           background_color: '#09090b',
           theme_color: '#09090b',
           icons: [
-            { src: '/favicon.ico', sizes: '48x48', type: 'image/x-icon' },
             {
-              src: '/android-chrome-192x192.png',
+              src: '/logo-generated.webp',
               sizes: '192x192',
               type: 'image/png',
               purpose: 'maskable',
             },
             {
-              src: '/android-chrome-512x512.png',
+              src: '/logo-generated.webp',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'maskable',

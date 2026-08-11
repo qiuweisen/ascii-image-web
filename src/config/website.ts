@@ -50,6 +50,11 @@ export const websiteConfig: WebsiteConfig = {
     get description() {
       return m.site_description();
     },
+    images: {
+      ogImage: '/og-generated.webp',
+      logoLight: '/logo-generated.webp',
+      logoDark: '/logo-generated.webp',
+    },
   },
   social: {
     github: 'https://github.com/qiuweisen/ascii-image-web',

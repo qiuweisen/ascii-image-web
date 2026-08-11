@@ -32,7 +32,7 @@ function AboutPage() {
                 <Avatar className="size-32 p-0.5">
                   <AvatarImage
                     className="rounded-full border-border"
-                    src="/logo.png"
+                    src={websiteConfig.metadata?.images?.logoDark}
                     alt={m.about_avatar()}
                   />
                   <AvatarFallback className="absolute inset-0">
