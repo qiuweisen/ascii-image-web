@@ -22,6 +22,8 @@ const publicPages = [
   { path: '/cookie', name: 'cookie policy' },
   { path: '/privacy', name: 'privacy policy' },
   { path: '/terms', name: 'terms of service' },
+  { path: '/ascii-art-for-discord', name: 'ASCII art for Discord' },
+  { path: '/ascii-art-for-readme', name: 'ASCII art for README' },
   { path: '/auth/login', name: 'login' },
   { path: '/auth/register', name: 'register' },
   { path: '/auth/forgot-password', name: 'forgot password' },
@@ -74,5 +76,37 @@ test.describe('public page smoke coverage', () => {
 
     await expect(response).toBeOK();
     expect(await response.json()).toEqual({ message: 'pong' });
+  });
+
+  test('scene pages expose distinct search intent and canonical URLs', async ({
+    page,
+  }) => {
+    await page.goto('/ascii-art-for-discord');
+    await expect(
+      page.getByRole('heading', { name: 'ASCII Art for Discord' })
+    ).toBeVisible();
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      /\/ascii-art-for-discord$/
+    );
+    await expect(page.getByText('56 COL')).toBeVisible();
+
+    await page.goto('/ascii-art-for-readme');
+    await expect(
+      page.getByRole('heading', { name: 'ASCII Art for README' })
+    ).toBeVisible();
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      /\/ascii-art-for-readme$/
+    );
+    await expect(page.getByText('96 COL')).toBeVisible();
+  });
+
+  test('sitemap includes both ASCII scene pages', async ({ request }) => {
+    const response = await request.get('/sitemap.xml');
+    const sitemap = await response.text();
+
+    expect(sitemap).toContain('/ascii-art-for-discord');
+    expect(sitemap).toContain('/ascii-art-for-readme');
   });
 });

@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parse, printParseErrorCode, type ParseError } from 'jsonc-parser';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -16,6 +17,23 @@ interface WranglerConfig {
   [key: string]: unknown;
 }
 
+export function parseWranglerContent(content: string): WranglerConfig {
+  const errors: ParseError[] = [];
+  const config = parse(content, errors, {
+    allowTrailingComma: true,
+    disallowComments: false,
+  }) as WranglerConfig;
+
+  if (errors.length > 0) {
+    const firstError = errors[0];
+    throw new Error(
+      `${printParseErrorCode(firstError.error)} at offset ${firstError.offset}`
+    );
+  }
+
+  return config;
+}
+
 /**
  * Parses the wrangler.jsonc file and returns the configuration object
  * @returns {WranglerConfig} The parsed wrangler configuration
@@ -25,14 +43,8 @@ export function parseWranglerConfig(): WranglerConfig {
   const wranglerPath = path.join(__dirname, '..', 'wrangler.jsonc');
   const wranglerContent = fs.readFileSync(wranglerPath, 'utf8');
 
-  // Remove comments from the JSONC content
-  const jsonContent = wranglerContent.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
-
-  // Fix trailing commas in objects and arrays (which are valid in JSONC but not in JSON)
-  const fixedJsonContent = jsonContent.replace(/,\s*([}\]])/g, '$1'); // Replace trailing commas before closing brackets
-
   try {
-    return JSON.parse(fixedJsonContent) as WranglerConfig;
+    return parseWranglerContent(wranglerContent);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     throw new Error(`Failed to parse wrangler.jsonc: ${errorMessage}`);

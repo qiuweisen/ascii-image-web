@@ -44,17 +44,18 @@ export function trackAsciiEvent(event: AsciiAnalyticsEvent) {
   if (typeof window === 'undefined') return;
 
   const payload = sanitizePayload(event);
-  const dataLayer = window.dataLayer;
-  if (Array.isArray(dataLayer)) {
-    dataLayer.push({ event: event.name, ...payload });
-  }
-
   if (typeof window.gtag === 'function') {
     window.gtag('event', event.name, payload);
+  } else if (Array.isArray(window.dataLayer)) {
+    window.dataLayer.push({ event: event.name, ...payload });
   }
 
   if (typeof window.plausible === 'function') {
     window.plausible(event.name, { props: payload });
+  }
+
+  if (typeof window.umami?.track === 'function') {
+    window.umami.track(event.name, payload);
   }
 }
 
@@ -66,5 +67,8 @@ declare global {
       eventName: string,
       options?: { props?: Record<string, unknown> }
     ) => void;
+    umami?: {
+      track: (eventName: string, data?: Record<string, unknown>) => void;
+    };
   }
 }

@@ -47,10 +47,7 @@ function escapeHtml(value: string) {
     .replaceAll("'", '&#39;');
 }
 
-export function formatAsciiOutput(
-  output: string,
-  format: AsciiOutputFormat
-) {
+export function formatAsciiOutput(output: string, format: AsciiOutputFormat) {
   if (format === 'markdown') return `\`\`\`text\n${output}\n\`\`\``;
   if (format === 'html') return `<pre>${escapeHtml(output)}</pre>`;
   return output;

@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   trackAsciiEvent,
   type AsciiAnalyticsEvent,
@@ -28,9 +28,7 @@ describe('trackAsciiEvent', () => {
 
     trackAsciiEvent(event);
 
-    expect(dataLayer).toEqual([
-      { event: 'ascii_copy', format: 'markdown' },
-    ]);
+    expect(dataLayer).toEqual([{ event: 'ascii_copy', format: 'markdown' }]);
   });
 
   it('no-ops when analytics is unavailable', () => {
@@ -45,5 +43,41 @@ describe('trackAsciiEvent', () => {
         payload: { source: 'upload', width: 56, rows: 20 },
       })
     ).not.toThrow();
+  });
+
+  it('does not duplicate GA events when gtag is available', () => {
+    const dataLayer: unknown[] = [];
+    const gtag = vi.fn();
+    Object.defineProperty(globalThis, 'window', {
+      configurable: true,
+      value: { dataLayer, gtag },
+    });
+
+    trackAsciiEvent({
+      name: 'ascii_download',
+      payload: { format: 'html' },
+    });
+
+    expect(gtag).toHaveBeenCalledWith('event', 'ascii_download', {
+      format: 'html',
+    });
+    expect(dataLayer).toEqual([]);
+  });
+
+  it('forwards sanitized events to Umami when configured', () => {
+    const track = vi.fn();
+    Object.defineProperty(globalThis, 'window', {
+      configurable: true,
+      value: { umami: { track } },
+    });
+
+    trackAsciiEvent({
+      name: 'ascii_preset_select',
+      payload: { preset: 'discord', output: 'private text' },
+    });
+
+    expect(track).toHaveBeenCalledWith('ascii_preset_select', {
+      preset: 'discord',
+    });
   });
 });

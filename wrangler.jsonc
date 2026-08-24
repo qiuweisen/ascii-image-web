@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "ascii-image-web",
-  "compatibility_date": "2026-08-10",
+  "compatibility_date": "2026-07-29",
   "compatibility_flags": [
     // Enable Node.js API
     // https://developers.cloudflare.com/workers/configuration/compatibility-flags/#nodejs-compatibility-flag

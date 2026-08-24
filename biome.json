@@ -21,6 +21,7 @@
       "!build",
       "!playwright-report",
       "!test-results",
+      "!temp",
       "!.wrangler",
       "!.content-collections",
       "!.firecrawl",

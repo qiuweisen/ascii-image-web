@@ -6,7 +6,14 @@ import {
 } from '@tabler/icons-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { trackAsciiEvent } from '@/lib/analytics-events';
 import { m } from '@/locale/paraglide/messages';
+import {
+  ASCII_PRESETS,
+  formatAsciiOutput,
+  type AsciiOutputFormat,
+  type AsciiPresetId,
+} from './ascii-converter-model';
 
 const RAMPS = {
   classic: ' .,:;irsXA253hMHGS#9B&@',
@@ -74,13 +81,22 @@ function renderAscii(
   return lines.join('\n');
 }
 
-export function AsciiConverter() {
+export function AsciiConverter({
+  presetId = 'default',
+}: {
+  presetId?: AsciiPresetId;
+}) {
+  const preset = ASCII_PRESETS[presetId];
   const [source, setSource] = useState<HTMLCanvasElement | null>(null);
   const [output, setOutput] = useState('');
-  const [width, setWidth] = useState(88);
-  const [contrast, setContrast] = useState(10);
-  const [ramp, setRamp] = useState<Ramp>('classic');
-  const [invert, setInvert] = useState(false);
+  const [width, setWidth] = useState(preset.width);
+  const [contrast, setContrast] = useState(preset.contrast);
+  const [ramp, setRamp] = useState<Ramp>(preset.ramp);
+  const [invert, setInvert] = useState(preset.invert);
+  const [outputFormat, setOutputFormat] = useState<AsciiOutputFormat>(
+    preset.outputFormat
+  );
+  const [selectedPreset, setSelectedPreset] = useState<AsciiPresetId>(presetId);
   const [status, setStatus] = useState(() => m.ascii_status_demo());
   const inputRef = useRef<HTMLInputElement>(null);
   const update = useCallback(
@@ -95,7 +111,7 @@ export function AsciiConverter() {
     update(source ?? demoImage());
   }, [update]);
   const loadFile = useCallback(
-    (file?: File) => {
+    (file?: File, sourceType: 'upload' | 'paste' = 'upload') => {
       if (
         !file ||
         !['image/jpeg', 'image/png', 'image/webp'].includes(file.type) ||
@@ -114,6 +130,21 @@ export function AsciiConverter() {
         URL.revokeObjectURL(imageUrl);
         setStatus(m.ascii_status_image_complete());
         update(canvas);
+        trackAsciiEvent({
+          name: sourceType === 'paste' ? 'ascii_paste' : 'ascii_upload',
+          payload: { mimeType: file.type, fileSize: file.size },
+        });
+        trackAsciiEvent({
+          name: 'ascii_conversion_complete',
+          payload: {
+            source: sourceType,
+            width,
+            rows: Math.max(
+              4,
+              Math.floor(((width * canvas.height) / canvas.width) * 0.48)
+            ),
+          },
+        });
       };
       image.onerror = () => {
         URL.revokeObjectURL(imageUrl);
@@ -121,7 +152,7 @@ export function AsciiConverter() {
       };
       image.src = imageUrl;
     },
-    [update]
+    [update, width]
   );
   useEffect(() => {
     const onPaste = (event: ClipboardEvent) => {
@@ -130,30 +161,53 @@ export function AsciiConverter() {
         ?.getAsFile();
       if (file) {
         event.preventDefault();
-        loadFile(file);
+        loadFile(file, 'paste');
       }
     };
     window.addEventListener('paste', onPaste);
     return () => window.removeEventListener('paste', onPaste);
   }, [loadFile]);
+  const formattedOutput = formatAsciiOutput(output, outputFormat);
   const copy = async () => {
     try {
       if (!navigator.clipboard) throw new Error('Clipboard unavailable');
-      await navigator.clipboard.writeText(output);
+      await navigator.clipboard.writeText(formattedOutput);
       setStatus(m.ascii_status_copied());
+      trackAsciiEvent({
+        name: 'ascii_copy',
+        payload: { format: outputFormat },
+      });
     } catch {
       setStatus(m.ascii_status_copy_error());
     }
   };
   const download = () => {
-    const blob = new Blob([output], { type: 'text/plain;charset=utf-8' });
+    const extension =
+      outputFormat === 'text'
+        ? 'txt'
+        : outputFormat === 'markdown'
+          ? 'md'
+          : 'html';
+    const mimeType =
+      outputFormat === 'html' ? 'text/html' : 'text/plain;charset=utf-8';
+    const blob = new Blob([formattedOutput], { type: mimeType });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'ascii-art.txt';
+    a.download = `ascii-art.${extension}`;
     a.click();
     URL.revokeObjectURL(url);
-    setStatus(m.ascii_status_downloaded());
+    setStatus(
+      outputFormat === 'markdown'
+        ? m.ascii_status_markdown_downloaded()
+        : outputFormat === 'html'
+          ? m.ascii_status_html_downloaded()
+          : m.ascii_status_downloaded()
+    );
+    trackAsciiEvent({
+      name: 'ascii_download',
+      payload: { format: outputFormat },
+    });
   };
   return (
     <section className="ascii-workspace" aria-label="Image to ASCII converter">
@@ -197,7 +251,14 @@ export function AsciiConverter() {
               max="160"
               step="4"
               value={width}
-              onChange={(e) => setWidth(+e.target.value)}
+              onChange={(e) => {
+                const value = +e.target.value;
+                setWidth(value);
+                trackAsciiEvent({
+                  name: 'ascii_control_change',
+                  payload: { control: 'width', value },
+                });
+              }}
             />
           </div>
           <div className="ascii-control-group">
@@ -214,8 +275,71 @@ export function AsciiConverter() {
               min="-40"
               max="60"
               value={contrast}
-              onChange={(e) => setContrast(+e.target.value)}
+              onChange={(e) => {
+                const value = +e.target.value;
+                setContrast(value);
+                trackAsciiEvent({
+                  name: 'ascii_control_change',
+                  payload: { control: 'contrast', value },
+                });
+              }}
             />
+          </div>
+          <fieldset className="ascii-control-group">
+            <legend>{m.ascii_preset_label()}</legend>
+            <div className="ascii-segmented">
+              {(['default', 'discord', 'readme'] as AsciiPresetId[]).map(
+                (id) => (
+                  <button
+                    key={id}
+                    type="button"
+                    className={selectedPreset === id ? 'is-active' : ''}
+                    onClick={() => {
+                      const next = ASCII_PRESETS[id];
+                      setSelectedPreset(id);
+                      setWidth(next.width);
+                      setContrast(next.contrast);
+                      setRamp(next.ramp);
+                      setInvert(next.invert);
+                      setOutputFormat(next.outputFormat);
+                      trackAsciiEvent({
+                        name: 'ascii_preset_select',
+                        payload: { preset: id },
+                      });
+                    }}
+                  >
+                    {id === 'default'
+                      ? m.ascii_preset_default()
+                      : id === 'discord'
+                        ? m.ascii_preset_discord()
+                        : m.ascii_preset_readme()}
+                  </button>
+                )
+              )}
+            </div>
+          </fieldset>
+          <div className="ascii-control-group">
+            <label htmlFor="output-format">
+              {m.ascii_control_output_format()}
+            </label>
+            <select
+              id="output-format"
+              value={outputFormat}
+              onChange={(event) => {
+                const format = event.target.value as AsciiOutputFormat;
+                setOutputFormat(format);
+                trackAsciiEvent({
+                  name: 'ascii_format_select',
+                  payload: { format },
+                });
+              }}
+            >
+              <option value="text">{m.ascii_output_format_text()}</option>
+              <option value="markdown">
+                {m.ascii_output_format_markdown()}
+              </option>
+              <option value="html">{m.ascii_output_format_html()}</option>
+            </select>
           </div>
           <fieldset className="ascii-control-group">
             <legend>{m.ascii_control_character_ramp()}</legend>
@@ -225,7 +349,13 @@ export function AsciiConverter() {
                   key={key}
                   type="button"
                   className={ramp === key ? 'is-active' : ''}
-                  onClick={() => setRamp(key)}
+                  onClick={() => {
+                    setRamp(key);
+                    trackAsciiEvent({
+                      name: 'ascii_control_change',
+                      payload: { control: 'ramp', value: key },
+                    });
+                  }}
                 >
                   {key === 'classic'
                     ? m.ascii_ramp_classic()
@@ -240,7 +370,16 @@ export function AsciiConverter() {
             <input
               type="checkbox"
               checked={invert}
-              onChange={(e) => setInvert(e.target.checked)}
+              onChange={(e) => {
+                setInvert(e.target.checked);
+                trackAsciiEvent({
+                  name: 'ascii_control_change',
+                  payload: {
+                    control: 'invert',
+                    value: e.target.checked ? 1 : 0,
+                  },
+                });
+              }}
             />{' '}
             {m.ascii_control_invert()}
           </label>
@@ -249,16 +388,23 @@ export function AsciiConverter() {
               <IconClipboard /> {m.ascii_action_copy()}
             </Button>
             <Button onClick={download} variant="outline" size="lg">
-              <IconDownload /> {m.ascii_action_download()}
+              <IconDownload />{' '}
+              {outputFormat === 'markdown'
+                ? m.ascii_action_download_markdown()
+                : outputFormat === 'html'
+                  ? m.ascii_action_download_html()
+                  : m.ascii_action_download()}
             </Button>
             <button
               type="button"
               className="ascii-reset"
               onClick={() => {
-                setWidth(88);
-                setContrast(10);
-                setRamp('classic');
-                setInvert(false);
+                setSelectedPreset(presetId);
+                setWidth(preset.width);
+                setContrast(preset.contrast);
+                setRamp(preset.ramp);
+                setInvert(preset.invert);
+                setOutputFormat(preset.outputFormat);
                 setStatus(m.ascii_status_demo());
                 update(demoImage());
               }}

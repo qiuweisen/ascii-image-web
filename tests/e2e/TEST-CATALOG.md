@@ -51,9 +51,11 @@ browser console errors or page errors.
 
 | # | Test name | Flow |
 |---|---|---|
-| 1 | Public pages render successfully | Open `/`, `/pricing`, `/blog`, `/blog/getting-started`, `/ai`, `/about`, `/contact`, `/changelog`, `/roadmap`, `/waitlist`, `/cookie`, `/privacy`, `/terms`, `/auth/login`, `/auth/register`, `/auth/forgot-password`, `/auth/reset-password` for `en` and `zh`, in `dark` and `light` mode. Verify each returns 2xx, renders a visible body, applies the requested theme, and emits no browser errors. |
+| 1 | Public pages render successfully | Open `/`, `/ascii-art-for-discord`, `/ascii-art-for-readme`, `/pricing`, `/blog`, `/blog/getting-started`, `/ai`, `/about`, `/contact`, `/changelog`, `/roadmap`, `/waitlist`, `/cookie`, `/privacy`, `/terms`, `/auth/login`, `/auth/register`, `/auth/forgot-password`, `/auth/reset-password` for `en` and `zh`, in `dark` and `light` mode. Verify each returns 2xx, renders a visible body, applies the requested theme, and emits no browser errors. |
 | 2 | Home login modal opens | Open `/`, click the navbar login button, verify the login dialog and credential inputs are visible, and assert no browser errors. |
 | 3 | Health check responds with pong | Call `/api/ping` and verify `{ "message": "pong" }`. |
+| 4 | Scene pages expose distinct search intent | Open the Discord and README routes, verify unique H1 and canonical metadata, then confirm each converter uses its intended width preset. |
+| 5 | Sitemap includes ASCII scene pages | Fetch `/sitemap.xml` and verify both scene URLs are discoverable. |
 
 ## Product: ASCII Converter
 
@@ -62,7 +64,8 @@ browser console errors or page errors.
 | # | Test name | Flow |
 |---|---|---|
 | 1 | Demo output responds to controls | Open `/`, verify the local demo output, switch character ramp, change width, and confirm output changes without a network upload. |
-| 2 | Line art can be filtered and copied | Open `/line-art`, filter to Animals, search for a cat, copy the matching one-line piece, and verify clipboard contents. |
+| 2 | Scene presets and output formats work | Open `/`, select the Discord preset, switch output to Markdown, copy the result, and verify the clipboard contains a fenced text block. |
+| 3 | Line art can be filtered and copied | Open `/line-art`, filter to Animals, search for a cat, copy the matching one-line piece, and verify clipboard contents. |
 
 ## 2. Authentication And Protected Routes
 

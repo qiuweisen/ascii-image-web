@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AsciiArtForDiscordRouteImport } from './routes/ascii-art-for-discord'
+import { Route as AsciiArtForReadmeRouteImport } from './routes/ascii-art-for-readme'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as LineArtRouteImport } from './routes/line-art'
@@ -63,6 +65,16 @@ const IndexRoute = IndexRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AsciiArtForDiscordRoute = AsciiArtForDiscordRouteImport.update({
+  id: '/ascii-art-for-discord',
+  path: '/ascii-art-for-discord',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AsciiArtForReadmeRoute = AsciiArtForReadmeRouteImport.update({
+  id: '/ascii-art-for-readme',
+  path: '/ascii-art-for-readme',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -284,6 +296,8 @@ const ApiWebhooksStripeRoute = ApiWebhooksStripeRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/ascii-art-for-discord': typeof AsciiArtForDiscordRoute
+  '/ascii-art-for-readme': typeof AsciiArtForReadmeRoute
   '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof DashboardRouteWithChildren
   '/line-art': typeof LineArtRoute
@@ -330,6 +344,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ascii-art-for-discord': typeof AsciiArtForDiscordRoute
+  '/ascii-art-for-readme': typeof AsciiArtForReadmeRoute
   '/auth': typeof AuthRouteWithChildren
   '/line-art': typeof LineArtRoute
   '/manifest.json': typeof ManifestDotjsonRoute
@@ -376,6 +392,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/ascii-art-for-discord': typeof AsciiArtForDiscordRoute
+  '/ascii-art-for-readme': typeof AsciiArtForReadmeRoute
   '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof DashboardRouteWithChildren
   '/line-art': typeof LineArtRoute
@@ -425,6 +443,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/ascii-art-for-discord'
+    | '/ascii-art-for-readme'
     | '/auth'
     | '/dashboard'
     | '/line-art'
@@ -471,6 +491,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ascii-art-for-discord'
+    | '/ascii-art-for-readme'
     | '/auth'
     | '/line-art'
     | '/manifest.json'
@@ -516,6 +538,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/ascii-art-for-discord'
+    | '/ascii-art-for-readme'
     | '/auth'
     | '/dashboard'
     | '/line-art'
@@ -564,6 +588,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  AsciiArtForDiscordRoute: typeof AsciiArtForDiscordRoute
+  AsciiArtForReadmeRoute: typeof AsciiArtForReadmeRoute
   AuthRoute: typeof AuthRouteWithChildren
   DashboardRoute: typeof DashboardRouteWithChildren
   LineArtRoute: typeof LineArtRoute
@@ -607,6 +633,20 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ascii-art-for-discord': {
+      id: '/ascii-art-for-discord'
+      path: '/ascii-art-for-discord'
+      fullPath: '/ascii-art-for-discord'
+      preLoaderRoute: typeof AsciiArtForDiscordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ascii-art-for-readme': {
+      id: '/ascii-art-for-readme'
+      path: '/ascii-art-for-readme'
+      fullPath: '/ascii-art-for-readme'
+      preLoaderRoute: typeof AsciiArtForReadmeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -984,6 +1024,8 @@ const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  AsciiArtForDiscordRoute: AsciiArtForDiscordRoute,
+  AsciiArtForReadmeRoute: AsciiArtForReadmeRoute,
   AuthRoute: AuthRouteWithChildren,
   DashboardRoute: DashboardRouteWithChildren,
   LineArtRoute: LineArtRoute,

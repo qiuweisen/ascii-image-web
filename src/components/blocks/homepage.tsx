@@ -57,18 +57,28 @@ export function HomePage() {
             <h2 id="styles-title">{m.ascii_styles_title()}</h2>
           </div>
           <div className="ascii-style-links">
-            <Link to="/line-art/" className="ascii-style-link">
+            <Link to="/line-art" className="ascii-style-link">
               <span>{m.ascii_styles_line_label()}</span>
               <strong>{m.ascii_styles_line_description()}</strong>
               <b>→</b>
             </Link>
+            <Link to="/ascii-art-for-discord" className="ascii-style-link">
+              <span>{m.ascii_styles_discord_label()}</span>
+              <strong>{m.ascii_styles_discord_description()}</strong>
+              <b>→</b>
+            </Link>
+            <Link to="/ascii-art-for-readme" className="ascii-style-link">
+              <span>{m.ascii_styles_readme_label()}</span>
+              <strong>{m.ascii_styles_readme_description()}</strong>
+              <b>→</b>
+            </Link>
             <div className="ascii-style-link is-muted">
-              <span>{m.ascii_styles_braille_label()}</span>
+              <span>04 / Braille</span>
               <strong>{m.ascii_styles_braille_description()}</strong>
               <em>{m.ascii_styles_soon()}</em>
             </div>
             <div className="ascii-style-link is-muted">
-              <span>{m.ascii_styles_color_label()}</span>
+              <span>05 / Color</span>
               <strong>{m.ascii_styles_color_description()}</strong>
               <em>{m.ascii_styles_soon()}</em>
             </div>
