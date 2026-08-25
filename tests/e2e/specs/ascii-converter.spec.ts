@@ -53,3 +53,24 @@ test('line art can be filtered and copied', async ({ page, context }) => {
     .poll(() => page.evaluate(() => navigator.clipboard.readText()))
     .toBe('=^..^=');
 });
+
+test('line art library exposes substantial SSR inventory and guidance', async ({
+  page,
+  request,
+}) => {
+  const response = await request.get('/line-art');
+  await expect(response).toBeOK();
+  const html = await response.text();
+
+  expect(
+    html.match(/class="ascii-piece"/g)?.length ?? 0
+  ).toBeGreaterThanOrEqual(40);
+
+  await page.goto('/line-art');
+  await expect(
+    page.getByRole('heading', { name: 'Copyable one-line ASCII art' })
+  ).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Keep the spacing intact' })
+  ).toBeVisible();
+});

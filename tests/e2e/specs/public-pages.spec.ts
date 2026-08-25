@@ -90,6 +90,15 @@ test.describe('public page smoke coverage', () => {
       /\/ascii-art-for-discord$/
     );
     await expect(page.getByText('56 COL')).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: 'Discord code block example' })
+    ).toBeVisible();
+    await expect(page.locator('.ascii-scene-example pre')).toContainText(
+      '```text'
+    );
+    await expect(
+      page.getByRole('link', { name: /ASCII Art for README/ })
+    ).toBeVisible();
 
     await page.goto('/ascii-art-for-readme');
     await expect(
@@ -100,6 +109,15 @@ test.describe('public page smoke coverage', () => {
       /\/ascii-art-for-readme$/
     );
     await expect(page.getByText('96 COL')).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: 'README Markdown example' })
+    ).toBeVisible();
+    await expect(page.locator('.ascii-scene-example pre')).toContainText(
+      '```text'
+    );
+    await expect(
+      page.getByRole('link', { name: /ASCII Art for Discord/ })
+    ).toBeVisible();
   });
 
   test('sitemap includes both ASCII scene pages', async ({ request }) => {
@@ -108,5 +126,18 @@ test.describe('public page smoke coverage', () => {
 
     expect(sitemap).toContain('/ascii-art-for-discord');
     expect(sitemap).toContain('/ascii-art-for-readme');
+    expect(sitemap).not.toContain('/zh/');
+    expect(sitemap).not.toContain('hreflang="zh-CN"');
+  });
+
+  test('unfinished locales stay out of the search index', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('link[hreflang="zh-CN"]')).toHaveCount(0);
+
+    await page.goto('/zh');
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+      'content',
+      'noindex'
+    );
   });
 });

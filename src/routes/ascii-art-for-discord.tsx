@@ -20,6 +20,9 @@ function DiscordAsciiPage() {
       lede={m.ascii_scene_discord_lede()}
       presetId="discord"
       guideTitle={m.ascii_scene_discord_how_title()}
+      exampleTitle={m.ascii_scene_discord_example_title()}
+      exampleBody={m.ascii_scene_discord_example_body()}
+      exampleCode={m.ascii_scene_discord_example_code()}
       steps={[
         {
           title: m.ascii_scene_discord_step_1_title(),

@@ -8,9 +8,10 @@ import {
 import {
   baseLocale,
   getLocale,
+  indexableLocales,
+  isIndexableLocale,
   isLocalizedPath,
   localeConfig,
-  locales,
 } from '@/lib/locale';
 
 /**
@@ -32,23 +33,35 @@ export function seo(
   const url = getCanonicalUrl(path);
   const image = options.image ?? getOgImage();
   const localized = isLocalizedPath(path);
-  const alternateLinks = localized
-    ? [
-        ...locales.map((locale) => ({
-          rel: 'alternate',
-          hrefLang: localeConfig[locale].hreflang,
-          href: getCanonicalUrlForLocale(path, locale),
-        })),
-        {
-          rel: 'alternate',
-          hrefLang: 'x-default',
-          href: getCanonicalUrlForLocale(path, baseLocale),
-        },
-      ]
-    : [];
+  const currentLocale = getLocale();
+  const alternateLinks =
+    localized && isIndexableLocale(currentLocale)
+      ? [
+          ...indexableLocales.map((locale) => ({
+            rel: 'alternate',
+            hrefLang: localeConfig[locale].hreflang,
+            href: getCanonicalUrlForLocale(path, locale),
+          })),
+          {
+            rel: 'alternate',
+            hrefLang: 'x-default',
+            href: getCanonicalUrlForLocale(path, baseLocale),
+          },
+        ]
+      : [];
+  const pageMetadata = metadata({
+    ...options,
+    url,
+    image,
+    type: options.type ?? 'website',
+  });
+
+  if (!isIndexableLocale(currentLocale)) {
+    pageMetadata.push({ name: 'robots', content: 'noindex' });
+  }
 
   return {
-    meta: metadata({ ...options, url, image, type: options.type ?? 'website' }),
+    meta: pageMetadata,
     links: [{ rel: 'canonical', href: url }, ...alternateLinks],
   };
 }
@@ -75,7 +88,7 @@ export const metadata = ({
   // for <html lang> / hreflang which uses hyphens.
   const currentLocale = getLocale();
   const ogLocale = localeConfig[currentLocale].hreflang.replace('-', '_');
-  const alternateLocales = locales
+  const alternateLocales = indexableLocales
     .filter((l) => l !== currentLocale)
     .map((l) => localeConfig[l].hreflang.replace('-', '_'));
   const metadata: Array<{

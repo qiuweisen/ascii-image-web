@@ -20,6 +20,9 @@ function ReadmeAsciiPage() {
       lede={m.ascii_scene_readme_lede()}
       presetId="readme"
       guideTitle={m.ascii_scene_readme_how_title()}
+      exampleTitle={m.ascii_scene_readme_example_title()}
+      exampleBody={m.ascii_scene_readme_example_body()}
+      exampleCode={m.ascii_scene_readme_example_code()}
       steps={[
         {
           title: m.ascii_scene_readme_step_1_title(),

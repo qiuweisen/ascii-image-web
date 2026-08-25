@@ -36,6 +36,13 @@ export const localeConfig = {
   },
 } satisfies Record<Locale, LocaleConfig>;
 
+// Only advertise locales whose product pages have complete, reviewed content.
+export const indexableLocales: readonly Locale[] = [baseLocale];
+
+export function isIndexableLocale(locale: string): boolean {
+  return indexableLocales.some((indexableLocale) => indexableLocale === locale);
+}
+
 export function parseMessageJson<T>(value: string, fallback: T): T {
   try {
     return JSON.parse(value) as T;

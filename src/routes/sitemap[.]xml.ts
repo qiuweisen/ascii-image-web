@@ -4,9 +4,9 @@ import { getSortedPosts } from '@/lib/blog';
 import { websiteConfig } from '@/config/website';
 import {
   baseLocale,
+  indexableLocales,
   isLocalizedPath,
   localeConfig,
-  locales,
   localizeHref,
 } from '@/lib/locale';
 
@@ -53,7 +53,7 @@ export const Route = createFileRoute('/sitemap.xml')({
             return '';
           }
 
-          const localeLinks = locales
+          const localeLinks = indexableLocales
             .map((locale) => {
               const href = `${base}${localizeHref(path, { locale })}`;
               return `\n    <xhtml:link rel="alternate" hreflang="${localeConfig[locale].hreflang}" href="${href}" />`;
