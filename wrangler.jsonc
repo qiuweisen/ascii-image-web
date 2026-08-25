@@ -24,7 +24,7 @@
   "main": "./src/server.ts",
 
   "vars": {
-    "VITE_BASE_URL": "https://ascii-image-web.weisen-qiu.workers.dev"
+    "VITE_BASE_URL": "https://asciiimage.com"
   },
 
   // Enables Workers Trace Events Logpush for a Worker

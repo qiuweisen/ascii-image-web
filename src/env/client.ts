@@ -1,13 +1,17 @@
 import { createEnv } from '@t3-oss/env-core';
 import * as z from 'zod';
 
+const defaultBaseUrl = import.meta.env.PROD
+  ? 'https://asciiimage.com'
+  : 'http://localhost:3000';
+
 /**
  * Client-side env (build-time from Vite, import.meta.env)
  */
 export const clientEnv = createEnv({
   clientPrefix: 'VITE_',
   client: {
-    VITE_BASE_URL: z.url().default('http://localhost:3000'),
+    VITE_BASE_URL: z.url().default(defaultBaseUrl),
 
     // Payment provider: 'stripe' | 'creem' | '' (empty = disabled)
     VITE_PAYMENT_PROVIDER: z.enum(['stripe', 'creem', '']).default(''),

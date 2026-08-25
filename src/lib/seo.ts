@@ -66,6 +66,31 @@ export function seo(
   };
 }
 
+export function softwareApplicationJsonLd({
+  path,
+  name,
+  description,
+}: {
+  path: string;
+  name: string;
+  description: string;
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name,
+    description,
+    url: getCanonicalUrl(path),
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+  };
+}
+
 export const metadata = ({
   title,
   description,

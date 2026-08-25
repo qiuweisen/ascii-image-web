@@ -1,14 +1,28 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { AsciiScenePage } from '@/components/ascii/ascii-scene-page';
 import { m } from '@/locale/paraglide/messages';
-import { seo } from '@/lib/seo';
+import { seo, softwareApplicationJsonLd } from '@/lib/seo';
 
 export const Route = createFileRoute('/ascii-art-for-readme')({
-  head: () =>
-    seo('/ascii-art-for-readme', {
-      title: m.ascii_scene_readme_title(),
-      description: m.ascii_scene_readme_description(),
-    }),
+  head: () => {
+    const title = m.ascii_scene_readme_title();
+    const description = m.ascii_scene_readme_description();
+    return {
+      ...seo('/ascii-art-for-readme', { title, description }),
+      scripts: [
+        {
+          type: 'application/ld+json',
+          children: JSON.stringify(
+            softwareApplicationJsonLd({
+              path: '/ascii-art-for-readme',
+              name: title,
+              description,
+            })
+          ),
+        },
+      ],
+    };
+  },
   component: ReadmeAsciiPage,
 });
 

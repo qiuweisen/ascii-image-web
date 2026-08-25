@@ -1,14 +1,28 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { AsciiScenePage } from '@/components/ascii/ascii-scene-page';
 import { m } from '@/locale/paraglide/messages';
-import { seo } from '@/lib/seo';
+import { seo, softwareApplicationJsonLd } from '@/lib/seo';
 
 export const Route = createFileRoute('/ascii-art-for-discord')({
-  head: () =>
-    seo('/ascii-art-for-discord', {
-      title: m.ascii_scene_discord_title(),
-      description: m.ascii_scene_discord_description(),
-    }),
+  head: () => {
+    const title = m.ascii_scene_discord_title();
+    const description = m.ascii_scene_discord_description();
+    return {
+      ...seo('/ascii-art-for-discord', { title, description }),
+      scripts: [
+        {
+          type: 'application/ld+json',
+          children: JSON.stringify(
+            softwareApplicationJsonLd({
+              path: '/ascii-art-for-discord',
+              name: title,
+              description,
+            })
+          ),
+        },
+      ],
+    };
+  },
   component: DiscordAsciiPage,
 });
 

@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useMemo, useState } from 'react';
 import { IconClipboard, IconSearch } from '@tabler/icons-react';
 import { m } from '@/locale/paraglide/messages';
-import { seo } from '@/lib/seo';
+import { seo, softwareApplicationJsonLd } from '@/lib/seo';
 
 type Category =
   | 'animals'
@@ -70,11 +70,25 @@ const categoryLabels: Record<Category, () => string> = {
   arrows: m.ascii_category_arrows,
 };
 export const Route = createFileRoute('/line-art')({
-  head: () =>
-    seo('/line-art', {
-      title: m.ascii_line_art_meta_title(),
-      description: m.ascii_line_art_meta_description(),
-    }),
+  head: () => {
+    const title = m.ascii_line_art_meta_title();
+    const description = m.ascii_line_art_meta_description();
+    return {
+      ...seo('/line-art', { title, description }),
+      scripts: [
+        {
+          type: 'application/ld+json',
+          children: JSON.stringify(
+            softwareApplicationJsonLd({
+              path: '/line-art',
+              name: title,
+              description,
+            })
+          ),
+        },
+      ],
+    };
+  },
   component: LineArtPage,
 });
 function LineArtPage() {
